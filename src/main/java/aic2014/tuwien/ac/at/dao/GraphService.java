@@ -2,6 +2,7 @@ package aic2014.tuwien.ac.at.dao;
 
 import java.net.UnknownHostException;
 
+import aic2014.tuwien.ac.at.beans.TopicNode;
 import aic2014.tuwien.ac.at.beans.UserNode;
 
 import com.mongodb.BasicDBObject;
@@ -19,37 +20,26 @@ public class GraphService {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * main access point from outside the DAO
-	 * @param dbObject
-	 */
+
 	public void processDbObject(BasicDBObject dbObject) {
-
-		UserNode newUser = graphDAO.createUserNode((String) dbObject.get("name"));
-		System.out.println("create new userNode with name: "  +(String) dbObject.get("name"));
-		String[] mentions = ((String) dbObject.get("friends")).split(";");
-
-		for (String currFriendName : mentions) {
-			
-			UserNode mentionedUser = graphDAO.createUserNode(currFriendName);	
-			newUser.addFriend(mentionedUser);
-			System.out.println("created Friend " + currFriendName + " and added Relationship");
-
-		}
+		processJSONStrings((String) dbObject.get("name"), (String) dbObject.get("friends"), "TestTopic1");
+		
+		
+		
 	}
 	
-	public void processJSONStrings(String username, String userMentions){
+	public void processJSONStrings(String username, String userMentions, String topic){
 		UserNode newUser = graphDAO.createUserNode(username);
-		System.out.println("create new userNode with name: "  +username);
-		
-		
-		String[] mentions = userMentions.split(";");
+		TopicNode newTopic = graphDAO.createTopicNode(topic);
+		newUser.addInterestedIn(newTopic);
+		String[] mentions = userMentions.replaceAll(" ", "").split(";");
 
 		for (String currFriendName : mentions) {
 			
 			UserNode mentionedUser = graphDAO.createUserNode(currFriendName);	
+			mentionedUser.addInterestedIn(newTopic);
+			
 			newUser.addFriend(mentionedUser);
-			System.out.println("created Friend " + currFriendName + " and added Relationship");
 
 		}
 	}

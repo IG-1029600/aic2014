@@ -33,15 +33,17 @@ public class App {
 		GraphService graphService = new GraphService();
 		
 		String testUser = "testUser1";
-		String mentions = "mentionedUser1; mentionedUser2";
+		String mentions = "mentionedUser1;mentionedUser2";
 		
-		graphService.processJSONStrings(testUser, mentions);
-		graphService.processJSONStrings(testUser, mentions);
+		String topic = "TestTopic";
+		
+		graphService.processJSONStrings(testUser, mentions, topic);
+		graphService.processJSONStrings(testUser, mentions, topic);
 		
 		testUser = "testUser2";
-		mentions = "testUser1; mentionedUser3";
+		mentions = "testUser1;mentionedUser3";
 		
-		graphService.processJSONStrings(testUser, mentions);
+		graphService.processJSONStrings(testUser, mentions, topic);
 		
 	}
 
