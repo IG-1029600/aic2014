@@ -8,37 +8,48 @@ import aic2014.tuwien.ac.at.beans.UserNode;
 import com.mongodb.BasicDBObject;
 
 public class GraphService {
-	
-	private GraphDAOImpl graphDAO; //TODO Interface
-	
-	public GraphService(){
+
+	private GraphDAOImpl graphDAO; // TODO Interface
+
+	public GraphService() {
 		try {
-			
+
 			this.graphDAO = new GraphDAOImpl();
-			
+
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void processDbObject(BasicDBObject dbObject) {
-		processJSONStrings((String) dbObject.get("name"), (String) dbObject.get("friends"), "TestTopic1");
-		
-		
-		
+		processJSONStrings((String) dbObject.get("name"), (String) dbObject.get("friends"), (String) dbObject.get("topics"));
+
 	}
-	
-	public void processJSONStrings(String username, String userMentions, String topic){
+
+	public void processJSONStrings(String username, String userMentions, String topics) {
+
 		UserNode newUser = graphDAO.createUserNode(username);
-		TopicNode newTopic = graphDAO.createTopicNode(topic);
-		newUser.addInterestedIn(newTopic);
+
+		String[] interestedTopics = topics.replaceAll(" ", "").split(";");
+
+		for (String currTopic : interestedTopics) {
+			// als ersteller
+			TopicNode newTopic = graphDAO.createTopicNode(currTopic);
+			newUser.addInterestedIn(newTopic);
+		}
+
 		String[] mentions = userMentions.replaceAll(" ", "").split(";");
 
 		for (String currFriendName : mentions) {
-			
-			UserNode mentionedUser = graphDAO.createUserNode(currFriendName);	
-			mentionedUser.addInterestedIn(newTopic);
-			
+
+			UserNode mentionedUser = graphDAO.createUserNode(currFriendName);
+
+			for (String currTopic : interestedTopics) {
+				// als getter
+				TopicNode newTopic = graphDAO.createTopicNode(currTopic);
+				mentionedUser.addInterestedIn(newTopic);
+			}
+
 			newUser.addFriend(mentionedUser);
 
 		}

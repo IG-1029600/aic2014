@@ -4,8 +4,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 //import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.graphdb.DynamicLabel;
@@ -16,14 +14,11 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-import scala.collection.Iterator;
 import aic2014.tuwien.ac.at.beans.TopicNode;
 import aic2014.tuwien.ac.at.beans.UserNode;
 
-import com.mongodb.BasicDBObject;
-
 //TODO update interface in the end
-public class GraphDAOImpl {//implements IGraphDAO {
+public class GraphDAOImpl {// implements IGraphDAO {
 
 	public GraphDatabaseService graphDb = null;
 	public static String DB_PATH = "database/neo4j/";
@@ -32,26 +27,25 @@ public class GraphDAOImpl {//implements IGraphDAO {
 	public GraphDAOImpl() throws UnknownHostException {
 
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
-		
-		this.engine = new ExecutionEngine( graphDb);
-		
+
+		this.engine = new ExecutionEngine(graphDb);
+
 		// registerShutdownHook(graphDb);
 
 		try (Transaction tx = graphDb.beginTx()) {
-			if(!graphDb.schema().getConstraints(DynamicLabel.label("User")).iterator().hasNext()){
+			if (!graphDb.schema().getConstraints(DynamicLabel.label("User")).iterator().hasNext()) {
 				graphDb.schema().constraintFor(DynamicLabel.label("User")).assertPropertyIsUnique("name").create();
-				//graphDb.schema().indexFor(DynamicLabel.label("User")).on("name").create();
-				
-				
-			}else{
+				// graphDb.schema().indexFor(DynamicLabel.label("User")).on("name").create();
+
+			} else {
 				System.out.println("Uniqueness constraint on User already defined");
 			}
-			
-			if(!graphDb.schema().getConstraints(DynamicLabel.label("Topic")).iterator().hasNext()){
+
+			if (!graphDb.schema().getConstraints(DynamicLabel.label("Topic")).iterator().hasNext()) {
 				graphDb.schema().constraintFor(DynamicLabel.label("Topic")).assertPropertyIsUnique("name").create();
-				//graphDb.schema().indexFor(DynamicLabel.label("User")).on("name").create();
-	
-			}else{
+				// graphDb.schema().indexFor(DynamicLabel.label("User")).on("name").create();
+
+			} else {
 				System.out.println("Uniqueness constraint on Topic already defined");
 			}
 			tx.success();
@@ -60,59 +54,55 @@ public class GraphDAOImpl {//implements IGraphDAO {
 	}
 
 	public UserNode createUserNode(String username) {
-		
+
 		UserNode userNode = null;
-		
+
 		Node result = null;
 		ResourceIterator<Object> resultIterator = null;
-		try ( Transaction tx = graphDb.beginTx() )
-		{
+		try (Transaction tx = graphDb.beginTx()) {
 			// CREATE/MATCH
-		    String queryString = "MERGE (n:User {name: {name}}) RETURN n";
-		    Map<String, Object> parameters = new HashMap<>();
-		    parameters.put( "name", username );
-		    engine.execute( queryString, parameters );
-		    resultIterator = engine.execute( queryString, parameters ).columnAs( "n" );
-		    result = (Node) resultIterator.next();
-		    
-		    userNode = new UserNode(result);
-		    tx.success();	   	   
-		}catch(Exception e){
+			String queryString = "MERGE (n:User {name: {name}}) RETURN n";
+			Map<String, Object> parameters = new HashMap<>();
+			parameters.put("name", username);
+			engine.execute(queryString, parameters);
+			resultIterator = engine.execute(queryString, parameters).columnAs("n");
+			result = (Node) resultIterator.next();
+
+			userNode = new UserNode(result);
+			tx.success();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("merged " + userNode);
-		
+
 		return userNode;
 	}
-	
-public TopicNode createTopicNode(String topicName) {
-		
+
+	public TopicNode createTopicNode(String topicName) {
+
 		TopicNode topicNode = null;
-		
+
 		Node result = null;
 		ResourceIterator<Object> resultIterator = null;
-		try ( Transaction tx = graphDb.beginTx() )
-		{
-		    String queryString = "MERGE (n:Topic {name: {name}}) RETURN n";
-		    Map<String, Object> parameters = new HashMap<>();
-		    parameters.put( "name", topicName );
-		    engine.execute( queryString, parameters );
-		    resultIterator = engine.execute( queryString, parameters ).columnAs( "n" );
-		    result = (Node) resultIterator.next();
-		    
-		    topicNode = new TopicNode(result);
-		    tx.success();	   	   
-		}catch(Exception e){
+		try (Transaction tx = graphDb.beginTx()) {
+			String queryString = "MERGE (n:Topic {name: {name}}) RETURN n";
+			Map<String, Object> parameters = new HashMap<>();
+			parameters.put("name", topicName);
+			engine.execute(queryString, parameters);
+			resultIterator = engine.execute(queryString, parameters).columnAs("n");
+			result = (Node) resultIterator.next();
+
+			topicNode = new TopicNode(result);
+			tx.success();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("created " + topicNode);
-		
+
 		return topicNode;
 	}
-
-
 
 	public void insertRelationShip() {
 		// TODO Auto-generated method stub
