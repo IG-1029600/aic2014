@@ -20,6 +20,8 @@ public class User {
 	private int retweets;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="user", fetch=FetchType.EAGER)
 	private List<Tweet> tweets;
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="user", fetch=FetchType.EAGER)
+	private List<Topic> topics;
 	public User( String username, int favorites, int retweets,
 			List<Tweet> tweets) {
 		
@@ -60,4 +62,12 @@ public class User {
 	public void setRetweets(int retweets) {
 		this.retweets = retweets;
 	}
+	public List<Topic> getTopics() {
+		return topics;
+	}
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
+	}
+	
+	
 }

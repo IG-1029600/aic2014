@@ -4,7 +4,13 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+
+
+
+import aic2014.tuwien.ac.at.beans.Tweet;
+import aic2014.tuwien.ac.at.beans.User;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -37,6 +43,23 @@ public class PublicDAOImpl implements IPublicDAO{
 	}
 	
 	
+	public void displayMongoDB(){
+		mongoClient = new MongoClient(serverAddress);
+		DB dbs=mongoClient.getDB("aic2014");
+		DBCollection dbCollection=dbs.getCollection("history-test");
+		
+		DBCursor cursor=dbCollection.find();
+		while(cursor.hasNext()){
+			BasicDBObject db=(BasicDBObject) cursor.next();
+			System.out.println(db.get("name"));
+			System.out.println(db.get("favorites"));
+			System.out.println(db.get("retweet"));
+			System.out.println("Retweets"+db.get("retweets-number"));
+		}
+		mongoClient.close();
+	}
+	
+	
 	public void insertTweet(Status status){
 		mongoClient = new MongoClient(serverAddress);
 		DB dbs=mongoClient.getDB("aic2014");
@@ -46,7 +69,7 @@ public class PublicDAOImpl implements IPublicDAO{
 		if(tps.isEmpty()==false){
 			BasicDBObject dbo=new BasicDBObject("tweet",tmp);
 				dbo.append("name", status.getUser().getName());
-		
+				dbo.append("id", status.getId());
 				dbo.append("favorites", status.getFavoriteCount());
 				dbo.append("retweets", status.getRetweetCount());
 				
@@ -79,8 +102,134 @@ public class PublicDAOImpl implements IPublicDAO{
 		}
 	}
 	
+	private Tweet tweetExists(List<Tweet> tweets, long number){
+		
+		for(Tweet tweet:tweets){
+			if(tweet.getId()==number){
+				return tweet;
+			}
+		}
+		return null;
+	}
+
+	
+	
+	public void deleteContent(){
+		mongoClient = new MongoClient(serverAddress);
+		DB dbs=mongoClient.getDB("aic2014");
+		DBCollection dbCollection=dbs.getCollection("history");
+		dbCollection.drop();
+		mongoClient.close();
+	}
 
 
+	
+
+	public void analyze(){
+		mongoClient = new MongoClient(serverAddress);
+		DB dbs=mongoClient.getDB("aic2014");
+		DBCollection dbCollection=dbs.getCollection("history-test");
+		DBCursor cursor=dbCollection.find();
+		while(cursor.hasNext()){
+			BasicDBObject dbObject=(BasicDBObject) cursor.next();
+			boolean retweet=(boolean) dbObject.get("retweet");
+			if(retweet==true){
+				insertTweet(dbObject);
+				insertRetweet(dbObject);
+			}else{
+				insertTweet(dbObject);
+			}
+		}
+	}
+		
+	private void insertTweet(BasicDBObject dbObject){
+		ClassPathXmlApplicationContext context = new 
+				ClassPathXmlApplicationContext("applicationContext.xml");
+		UserDao userDao = (UserDao) context.getBean("userDao");
+		List<User> users=userDao.getOne(dbObject.getString("name"));
+		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
+		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
+		if(users.size()==0){
+			User nUser=createUser(dbObject.getString("name"),dbObject.getInt("favorites"),dbObject.getInt("retweets"));
+			userDao.save(nUser);
+			nUser.setTweets(tweetDaoImpl.createTweets(nUser,dbObject.getInt("favorites"),dbObject.getInt("retweets"),dbObject.getLong("id")));
+			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"),nUser));
+			
+			
+			userDao.updateUser(nUser);
+
+		}else{
+			
+			User user=users.get(0);
+			user.setFavorites(user.getFavorites()+dbObject.getInt("favorites"));
+			user.setRetweets(user.getRetweets()+dbObject.getInt("retweets"));
+			List<Tweet> tweets=user.getTweets();
+			tweets.add(tweetDaoImpl.addTweet(user,dbObject.getInt("favorites"),dbObject.getInt("retweets"),dbObject.getLong("id")));
+			user.setTweets(tweets);
+			user.setTopics(topicDaoImpl.updateTopic(dbObject.getString("topics"),user.getTopics(),user));
+			userDao.updateUser(user);
+			
+		}
+		context.close();
+	}
+
+	
+
+	
+
+	private void insertRetweet(BasicDBObject dbObject){
+		ClassPathXmlApplicationContext context = new 
+				ClassPathXmlApplicationContext("applicationContext.xml");
+		UserDao userDao = (UserDao) context.getBean("userDao");
+		List<User> users=userDao.getOne(dbObject.getString("retweetUsername"));
+		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
+		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
+		if(users.size()==0){
+			User nUser=createUser(dbObject.getString("retweetUsername"),dbObject.getInt("retweets-favorites"),dbObject.getInt("retweets-number"));
+			userDao.save(nUser);
+			nUser.setTweets(tweetDaoImpl.createTweets(nUser,dbObject.getInt("retweets-favorites"),dbObject.getInt("retweets-number"),dbObject.getLong("retweetid")));
+			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"),nUser));
+			userDao.updateUser(nUser);
+			
+		}else{
+			User user=users.get(0);
+			List<Tweet> tweets=user.getTweets();
+			Tweet ttweet=tweetExists(tweets, dbObject.getLong("retweetid"));
+			if(ttweet==null){
+				user.setFavorites(user.getFavorites()+dbObject.getInt("retweets-favorites"));
+				user.setRetweets(user.getRetweets()+dbObject.getInt("retweets-number"));	
+				user.setTweets(tweetDaoImpl.createTweets(user,dbObject.getInt("retweets-favorites"),dbObject.getInt("retweets-number"),dbObject.getLong("retweetid")));
+			
+			
+			}else{
+				int retweets=user.getRetweets()+(dbObject.getInt("retweets-number")-ttweet.getRetweets());
+				int favorites=user.getFavorites()+(dbObject.getInt("retweets-favorites")-ttweet.getFavorites());		
+				ttweet.setFavorites(dbObject.getInt("retweets-favorites"));
+				ttweet.setRetweets(dbObject.getInt("retweets-number"));
+				tweets.remove(ttweet);
+				user.setFavorites(favorites);
+				user.setRetweets(retweets);
+				tweets.add(ttweet);
+				user.setTweets(tweets);
+				
+			}
+			user.setTopics(topicDaoImpl.updateTopic(dbObject.getString("topics"),user.getTopics(),user));
+			userDao.updateUser(user);
+		}
+		context.close();
+	}
+	
+	
+	private User createUser(String name, int fav, int retweets){
+		User nUser=new User();
+		nUser.setUsername(name);
+		nUser.setFavorites(fav);
+		nUser.setRetweets(retweets);
+		return nUser;
+	}
+	
+
+	
 	private String topics(String text){
 		String result="";
 		for(String tmp:filter){
@@ -102,44 +251,5 @@ public class PublicDAOImpl implements IPublicDAO{
 		}
 		return user;
 	}
-	
-	
-	public void deleteContent(){
-		mongoClient = new MongoClient(serverAddress);
-		DB dbs=mongoClient.getDB("aic2014");
-		DBCollection dbCollection=dbs.getCollection("history");
-		dbCollection.drop();
-		mongoClient.close();
-	}
 
-
-
-
-	public void analyze(){
-		mongoClient = new MongoClient(serverAddress);
-		DB dbs=mongoClient.getDB("aic2014");
-		DBCollection dbCollection=dbs.getCollection("history-test");
-		DBCursor cursor=dbCollection.find();
-		while(cursor.hasNext()){
-			BasicDBObject dbObject=(BasicDBObject) cursor.next();
-			boolean retweet=(boolean) dbObject.get("retweet");
-			if(retweet==true){
-				insertTweet(dbObject);
-				insertRetweet(dbObject);
-			}else{
-				insertTweet(dbObject);
-			}
-		}
-	}
-	
-	private void insertTweet(BasicDBObject dbObject){
-		
-	}
-
-	private void insertRetweet(BasicDBObject dbObject){
-		
-	}
-	
-	
-	
 }

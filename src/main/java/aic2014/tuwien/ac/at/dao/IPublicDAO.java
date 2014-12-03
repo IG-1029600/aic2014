@@ -10,5 +10,5 @@ interface IPublicDAO {
 	void insertTweet(Status status);
 	void analyze();
 	void deleteContent();
-
+	void displayMongoDB();
 }

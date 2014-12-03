@@ -19,8 +19,24 @@ public class UserDao {
 		return user.getId();
 	}
 
+	public long updateUser(User user){
+		em.merge(user);
+		return user.getId();
+	}
+	
+	
 	public List<User> getAll() {
 		return em.createQuery("SELECT u FROM User u", User.class)
 				.getResultList();
 	}
+	
+	public List<User> getOne(String username){
+		if(username.contains("'")==true){
+			username=username.replaceAll("'", "''");
+		}
+		return em.createQuery("SELECT u FROM User u WHERE u.username= '"+username+"'",User.class)
+				.getResultList();
+	}
+	
+	
 }
