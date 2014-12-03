@@ -4,7 +4,7 @@ import com.mongodb.BasicDBObject;
 
 public interface IGraphDAO {
 
-	void processDbObject(BasicDBObject dbObject);
+	//void processDbObject(BasicDBObject dbObject);
 
 	void insertRelationShip();
 

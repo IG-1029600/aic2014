@@ -30,7 +30,7 @@ public class PublicDAOImpl implements IPublicDAO {
 		List<MongoCredential> auths = new ArrayList<MongoCredential>();
 		auths.add(creds);
 
-		graphDao = new GraphDAOImpl();
+		//graphDao = new GraphDAOImpl();
 
 	}
 
@@ -117,7 +117,8 @@ public class PublicDAOImpl implements IPublicDAO {
 			} else {
 				insertTweet(dbObject);
 			}
-			graphDao.processDbObject(dbObject);
+			GraphService graphService = new GraphService();
+			graphService.processDbObject(dbObject);
 		}
 	}
 

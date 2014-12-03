@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import aic2014.tuwien.ac.at.beans.User;
 import aic2014.tuwien.ac.at.dao.GraphDAOImpl;
+import aic2014.tuwien.ac.at.dao.GraphService;
 import aic2014.tuwien.ac.at.dao.IGraphDAO;
 import aic2014.tuwien.ac.at.dao.UserDao;
 
@@ -27,13 +28,21 @@ public class App {
 		}
 		context.close();
 
-		try {
-			IGraphDAO graphDao = new GraphDAOImpl();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		
+		//Graph testing
+		GraphService graphService = new GraphService();
+		
+		String testUser = "testUser1";
+		String mentions = "mentionedUser1; mentionedUser2";
+		
+		graphService.processJSONStrings(testUser, mentions);
+		graphService.processJSONStrings(testUser, mentions);
+		
+		testUser = "testUser2";
+		mentions = "testUser1; mentionedUser3";
+		
+		graphService.processJSONStrings(testUser, mentions);
+		
 	}
 
 }

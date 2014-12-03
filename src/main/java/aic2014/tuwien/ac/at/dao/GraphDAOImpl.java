@@ -1,69 +1,81 @@
 package aic2014.tuwien.ac.at.dao;
 
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
+
+import org.neo4j.cypher.javacompat.ExecutionEngine;
+//import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
+import scala.collection.Iterator;
 import aic2014.tuwien.ac.at.beans.UserNode;
 
 import com.mongodb.BasicDBObject;
 
-public class GraphDAOImpl implements IGraphDAO {
+//TODO update interface in the end
+public class GraphDAOImpl {//implements IGraphDAO {
 
 	public GraphDatabaseService graphDb = null;
 	public static String DB_PATH = "database/neo4j/";
+	private final ExecutionEngine engine;
 
 	public GraphDAOImpl() throws UnknownHostException {
 
 		graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(DB_PATH);
+		
+		this.engine = new ExecutionEngine( graphDb);
+		
 		// registerShutdownHook(graphDb);
 
 		try (Transaction tx = graphDb.beginTx()) {
-			graphDb.schema().constraintFor(DynamicLabel.label("User")).assertPropertyIsUnique("name").create();
+			if(!graphDb.schema().getConstraints(DynamicLabel.label("User")).iterator().hasNext()){
+				graphDb.schema().constraintFor(DynamicLabel.label("User")).assertPropertyIsUnique("name").create();
+				//graphDb.schema().indexFor(DynamicLabel.label("User")).on("name").create();
+				
+				
+			}else{
+				System.out.println("Uniqueness constraint on User already defined");
+			}
 			tx.success();
 		}
 
 	}
 
-	public void insertNode(UserNode user) {
-
-	}
-
-	public void processDbObject(BasicDBObject dbObject) {
-		// TODO Auto-generated method stub
-
-		Node newPersonNode = graphDb.createNode();
-		newPersonNode.setProperty(UserNode.NAME, dbObject.get("name"));
-
-		// lock now taken, we can check if already exist in index
-		// Node alreadyExist = index.get(UserNode.NAME,
-		// dbObject.get("name")).getSingle();
-		// if (alreadyExist != null) {
-		// throw new Exception("Person with this name already exists ");
-		// }
-
-		UserNode newUser = new UserNode(newPersonNode);
-
-		String[] mentions = ((String) dbObject.get("friends")).split(";");
-
-		for (String user : mentions) {
-			Node currNode = graphDb.createNode();
-			currNode.setProperty(UserNode.NAME, user);
-
-			UserNode currUser = new UserNode(currNode);
-
-			newUser.addFriend(currUser);
-
+	public UserNode createUserNode(String username) {
+		
+		UserNode userNode = null;
+		
+		Node result = null;
+		ResourceIterator<Object> resultIterator = null;
+		try ( Transaction tx = graphDb.beginTx() )
+		{
+		    String queryString = "MERGE (n:User {name: {name}}) RETURN n";
+		    Map<String, Object> parameters = new HashMap<>();
+		    parameters.put( "name", username );
+		    engine.execute( queryString, parameters );
+		    resultIterator = engine.execute( queryString, parameters ).columnAs( "n" );
+		    result = (Node) resultIterator.next();
+		    
+		    userNode = new UserNode(result);
+		    tx.success();	   	   
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-
-		// index.add(newPersonNode, Person.NAME, name);
-
+		
+		System.out.println(userNode);
+		
+		return userNode;
 	}
+
+
 
 	public void insertRelationShip() {
 		// TODO Auto-generated method stub
