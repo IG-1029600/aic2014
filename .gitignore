@@ -1,1 +1,37 @@
 /target/
+/database/neo4j/
+
+
+*/*/target
+*.orig
+*.class
+
+#__eclipse gitignore template__
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+
+src/main/java/aic2014/tuwien/ac/at/dao/PublicDAOImpl.java
