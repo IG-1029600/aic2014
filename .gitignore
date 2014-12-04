@@ -33,5 +33,3 @@ local.properties
 
 # PDT-specific
 .buildpath
-
-src/main/java/aic2014/tuwien/ac/at/dao/PublicDAOImpl.java
