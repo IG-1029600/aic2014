@@ -112,6 +112,7 @@ public class PublicDAOImpl implements IPublicDAO {
 	}
 
 	public void analyze() {
+		GraphService graphService = new GraphService();
 		mongoClient = new MongoClient(serverAddress);
 		DB dbs = mongoClient.getDB("aic2014");
 		DBCollection dbCollection = dbs.getCollection("history-test");
@@ -120,13 +121,12 @@ public class PublicDAOImpl implements IPublicDAO {
 			BasicDBObject dbObject = (BasicDBObject) cursor.next();
 			// TODO (Cannot cast dbObject to boolean
 			boolean retweet = false; // (boolean) dbObject.get("retweet");
-			if (retweet == true) {
-				insertTweet(dbObject);
-				insertRetweet(dbObject);
-			} else {
-				insertTweet(dbObject);
-			}
-			GraphService graphService = new GraphService();
+			// if (retweet == true) {
+			// insertTweet(dbObject);
+			// insertRetweet(dbObject);
+			// } else {
+			// insertTweet(dbObject);
+			// }
 			graphService.processDbObject(dbObject);
 		}
 	}
