@@ -1,5 +1,7 @@
 package aic2014.tuwien.ac.at.dao;
 
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,6 +9,8 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import aic2014.tuwien.ac.at.beans.Document;
+import aic2014.tuwien.ac.at.beans.Topic;
 import aic2014.tuwien.ac.at.beans.User;
 @Transactional
 public class UserDao {
@@ -38,5 +42,35 @@ public class UserDao {
 				.getResultList();
 	}
 	
+
+	
+	public ArrayList<Document> getAddsforUser(String username, int numberOfMentioned){
+		
+		List<User> userList = getOne(username);
+		
+		User user = userList.get(0);
+		
+	
+		
+		ArrayList<String> topicList = new ArrayList<String>();
+		
+		for(Topic topic : user.getTopics() ){
+			
+			if(topic.getCount()>=numberOfMentioned){
+				
+				topicList.add(topic.getName());
+				
+			}
+			
+			
+		}
+		
+		
+		DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
+		
+		ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
+		
+		return docList;
+	}
 	
 }
