@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<h:outputStylesheet name="/css/app.css" />
+</h:head>
+<h:body>
+	<h:panelGroup layout="block"
+		style="padding-left:1%; padding-right:1%;min-width:720px;">
+		<h:panelGroup layout="block" style="margin-top: 25px;margin-bottom: 15px;">
+			<h:panelGroup style="top:10px;text-align:left;position:absolute">
+				<p:graphicImage value="/resources/images/image.png" />
+			</h:panelGroup>
+			<h:form>
+				<h:panelGroup id="panelLogin">
+					<h:panelGroup rendered="#{!loginController.loginModel.login}" layout="block"
+						style="text-align:right">
+						<p:inputText placeholder="Login" style="margin-right:5px"></p:inputText>
+						<p:password placeholder="Passwort" style="margin-right:5px"></p:password>
+						<p:commandButton value="Anmelden"
+							action="#{loginController.doLogin}" update="panelLogin,:panel"
+							style="margin-left:5px"></p:commandButton>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{loginController.loginModel.login}" layout="block"
+						style="text-align:right">
+						<p:commandButton value="Abmelden"
+							action="#{loginController.doLogout}" update="panelLogin,:panel"
+							style="margin-left:5px"></p:commandButton>
+					</h:panelGroup>
+				</h:panelGroup>
+			</h:form>
+		</h:panelGroup>
+		<h:panelGroup id="panel" layout="block">
+			<h:form id = "form">
+				
+				<p:tabView id="tabView"  rendered="true">
+					<p:ajax event="tabChange" update="tabView" />
+					<p:tab title="Home" closable="false" disabled="false">
+						<h:panelGroup id="tabHome">
+							<h:panelGroup  rendered="true" id="home">
+								<ui:include src="/pages/home.xhtml" />
+							</h:panelGroup>
+					     </h:panelGroup>
+					</p:tab>	
+					<p:tab title="Users" closable="false" disabled="false">
+						<h:panelGroup id="users">
+							<ui:include src="/pages/users.xhtml" />
+						</h:panelGroup>
+					</p:tab>
+					<p:tab title="Adds" closable="false">
+						<h:panelGroup id="adds">
+							<ui:include src="/pages/adds.xhtml" />
+						</h:panelGroup>
+					</p:tab>
+					<p:tab title="Settings" closable="false" disabled="false">
+						<h:panelGroup id="settings">
+							<ui:include src="/pages/settings.xhtml" />
+						</h:panelGroup>
+					</p:tab>	
+				</p:tabView>
+				 <p:messages id="messages"  showDetail="false" autoUpdate="true" closable="true" globalOnly="true"  />  
+			</h:form>
+		</h:panelGroup>
+	</h:panelGroup>
+</h:body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+	 <p:fieldset rendered="#{!windowController.windowModel.customerNewSecDialog}" legend="Add Queries">
+		<h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+			
+			<h:outputText value="Suggest concrete adds for user: " />  
+	        <p:inputText id="username" style="width:120px" value=" " />
+	        
+	        <h:outputText value="Interests " />  
+		    <p:selectOneMenu value="#{bean.selectedItem}" style="width:125px">
+		        <f:selectItem itemValue="1" itemLabel="existing" />
+		        <f:selectItem itemValue="2" itemLabel="potential" />
+		    </p:selectOneMenu>
+	        <!-- TODO get parameters to actionListener -->
+	        <p:commandButton value="search" update="#{idPrefix}searchAdd" actionListener="#{addController.findAdds(username, 1)}"></p:commandButton>
+	        <p:spacer width="180px" height="20px" />
+			
+			
+		</h:panelGrid>
+
+		<p:dataTable id="#{idPrefix}searchAdd" var="item" value="#{addController.addModel.searchResult}">  
+        
+        <p:column headerText="Name">  
+            <h:outputText value="#{item.name}" />  
+        </p:column>
+        <p:column headerText="Company">  
+            <h:outputText value="#{item.company}" />  
+        </p:column> 
+        <p:column headerText="Category">  
+            <h:outputText value="#{item.category}" />  
+        </p:column> 
+        <p:column headerText="Link">  
+            <h:outputText value="#{item.homepage}" />  
+        </p:column>
+        <p:column headerText="Add">  
+            <h:outputText value="#{item.filepath}" />  
+        </p:column>
+        
+    </p:dataTable>  
+    
+   
+    </p:fieldset>
+   </ui:composition>
+</html>

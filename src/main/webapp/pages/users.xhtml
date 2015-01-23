@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition>
+		<p:fieldset  rendered="#{!windowController.windowModel.roomNewSecDialog}"  legend="User Queries">  
+			<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">  
+				<h:outputText value="Most influenetal persons: " />  
+		        <p:inputText style="width:120px" value=" " />
+		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findInfluentUsers()}"></p:commandButton>
+		        <p:spacer width="180px" height="20px" />
+		        
+		        <h:outputText value="Persons interestet in broad range of topics: " />  
+		        <p:inputText style="width:120px" value=" " />
+		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findUsers()}"></p:commandButton>
+		        <p:spacer width="180px" height="20px" />
+		        
+		        <h:outputText value="Persons focused on topics: " />  
+		        <p:inputText style="width:120px" value=" " />
+		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findUsers()}"></p:commandButton>
+		        <p:spacer width="180px" height="20px" />
+			
+			</h:panelGrid>
+						
+		
+			<p:dataTable id="#{idPrefix}searchUser" var="item" value="#{userController.userModel.searchResult}">  
+		        
+		        <p:column headerText="Username">  
+		            <h:outputText value="#{item.col1}" />  
+		        </p:column>   
+		  
+		        <p:column headerText="Col 2">  
+		            <h:outputText value="#{item.col2}"/>  
+		        </p:column>  
+		  
+		        <p:column headerText="Col 3">  
+		            <h:outputText value="#{item.col3}" />  
+		        </p:column>  
+		  
+		        <p:column headerText="Col 4">  
+		            <h:outputText value="#{item.col4}" />  
+		        </p:column>
+	        
+	    	</p:dataTable>
+   
+    </p:fieldset>
+   </ui:composition>
+</html>

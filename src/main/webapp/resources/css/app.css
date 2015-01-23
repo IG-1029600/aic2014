@@ -1,0 +1,46 @@
+.ui-widget{
+    font-family:Arial,sans-serif;font-size: 85% !important;
+}
+.ui-fieldset .ui-fieldset-legend
+{
+	background: #F8F8F8; !important;
+	border:0 !important;
+	
+	padding:0.3em !important;
+	margin:0.5em !important;
+		-moz-box-shadow: 0 0 5px #888;
+-webkit-box-shadow: 0 0 5px#888;
+box-shadow: 0 0 5px #888;
+color: #000000;
+	
+}
+.ui-fieldset
+{
+	background: #F8F8F8; /* Old browsers */
+	
+	-moz-box-shadow: 0 0 5px #888;
+-webkit-box-shadow: 0 0 5px#888;
+box-shadow: 0 0 5px #888;
+}
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important;
+    vertical-align:top !important;
+     font-family:Arial,sans-serif;font-size: 1.1em !important;
+     color:0;
+     
+}
+.defaultBackgroundWhite
+{
+	background-color: #FFFFFF;
+		-moz-box-shadow: 0 0 5px #888;
+-webkit-box-shadow: 0 0 5px#888;
+box-shadow: 0 0 5px #888;
+
+}
+
+.twoColumnLayout 
+{
+	
+	width: 70%;
+} 

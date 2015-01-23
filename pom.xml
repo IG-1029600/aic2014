@@ -2,7 +2,43 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>aic2014.tuwien.ac.at</groupId>
   <artifactId>aic2014</artifactId>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
+  
+  
+  <build>
+	 <plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>2.3.2</version>
+			<configuration>
+				<source>1.7</source>
+				<target>1.7</target>
+			</configuration>
+		</plugin>
+		<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+            		<url>http://localhost:8080/manager/text</url>
+    				<server>MyTomcat</server>
+    				<path>/aic2014</path>
+        		</configuration>
+			</plugin>
+		
+	 </plugins>
+	</build>
+  
+  <repositories>
+		<repository>
+			<id>prime-repo</id>
+			<name>Prime Repo</name>
+			<url>http://repository.primefaces.org</url>
+		</repository>
+	</repositories>
+  
   <dependencies>
   	<dependency>
   		<groupId>org.springframework</groupId>
@@ -64,5 +100,78 @@
         <artifactId>twitter4j-stream</artifactId>
         <version>[4.0,)</version>
     </dependency>
+    
+    
+	
+	<!-- JSF 2 -->
+	<dependency>
+		<groupId>com.sun.faces</groupId>
+		<artifactId>jsf-api</artifactId>
+		<version>2.2.4</version>
+	</dependency>
+	<dependency>
+		<groupId>com.sun.faces</groupId>
+		<artifactId>jsf-impl</artifactId>
+		<version>2.2.4</version>
+	</dependency>
+
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<version>1.2</version>
+	</dependency>
+
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.5</version>
+	</dependency>
+
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<version>2.1</version>
+	</dependency>
+	
+	<!-- EL -->
+	
+	<dependency>
+		<groupId>org.glassfish.web</groupId>
+		<artifactId>el-impl</artifactId>
+		<version>2.2</version>
+	</dependency>
+	<dependency>
+		<groupId>org.glassfish</groupId>
+		<artifactId>javax.faces</artifactId>
+		<version>2.2.2</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+		<version>3.0.4.RELEASE</version>
+	</dependency>
+	
+    <dependency>  
+        <groupId>org.primefaces</groupId>  
+        <artifactId>primefaces</artifactId>  
+        <version>5.1</version>  
+    </dependency>
+    
+    <dependency>
+		<groupId>org.primefaces.themes</groupId>
+		<artifactId>home</artifactId>
+		<version>1.0.6</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>javax.inject</groupId>
+		<artifactId>javax.inject</artifactId>
+		<version>1</version>
+	</dependency>
   </dependencies>
+  
+  
+  
+  
 </project>
