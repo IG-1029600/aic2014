@@ -8,21 +8,19 @@
 	xmlns:p="http://primefaces.org/ui">
 <ui:composition>
 		<p:fieldset  rendered="#{!windowController.windowModel.roomNewSecDialog}"  legend="User Queries">  
-			<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">  
-				<h:outputText value="Most influenetal persons: " />  
-		        <p:inputText style="width:120px" value=" " />
-		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findInfluentUsers()}"></p:commandButton>
-		        <p:spacer width="180px" height="20px" />
-		        
-		        <h:outputText value="Persons interestet in broad range of topics: " />  
-		        <p:inputText style="width:120px" value=" " />
+			<h:panelGrid columns="5" style="margin-bottom:10px" cellpadding="5">  
+				
+			
+				<h:outputText value="Persons: " />  
+		    	<p:selectOneMenu value="#{userModel.type}" style="width:200px">
+		        	<f:selectItem itemValue="most" itemLabel="Most Influental" />
+		        	<f:selectItem itemValue="broad" itemLabel="interestet in broad range of topics" />
+		        	<f:selectItem itemValue="focused" itemLabel="focused on topics" />
+		    	</p:selectOneMenu>
+		        <p:inputText style="width:120px" value="#{userModel.amount}" />
 		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findUsers()}"></p:commandButton>
 		        <p:spacer width="180px" height="20px" />
 		        
-		        <h:outputText value="Persons focused on topics: " />  
-		        <p:inputText style="width:120px" value=" " />
-		        <p:commandButton value="search" update="#{idPrefix}searchUser" actionListener="#{userController.findUsers()}"></p:commandButton>
-		        <p:spacer width="180px" height="20px" />
 			
 			</h:panelGrid>
 						

@@ -19,12 +19,7 @@ public class UserController {
 
 	public void findUsers() {
 
-		// userModel.setSearchResult(userService.findUsers());
-	}
-
-	public void findInfluentUsers(int amount) {
-
-		// userModel.setSearchResult();
+		System.out.println("QueryType:" + userModel.getType() + " amount:" + userModel.getAmount());
 
 		// userModel.setSearchResult(userService.findUsers());
 	}

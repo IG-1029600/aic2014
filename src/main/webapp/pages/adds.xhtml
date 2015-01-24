@@ -7,19 +7,19 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 <ui:composition>
-	 <p:fieldset rendered="#{!windowController.windowModel.customerNewSecDialog}" legend="Add Queries">
+	 <p:fieldset rendered="#{!windowController.windowModel.customerNewSecDialog}" legend="Ad Queries">
 		<h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
 			
 			<h:outputText value="Suggest concrete adds for user: " />  
-	        <p:inputText id="username" style="width:120px" value=" " />
+	        <p:inputText style="width:120px" value="#{addModel.username}" />
 	        
 	        <h:outputText value="Interests " />  
-		    <p:selectOneMenu value="#{bean.selectedItem}" style="width:125px">
-		        <f:selectItem itemValue="1" itemLabel="existing" />
-		        <f:selectItem itemValue="2" itemLabel="potential" />
+		    <p:selectOneMenu value="#{addModel.interest}" style="width:125px">
+		        <f:selectItem itemValue="existing" itemLabel="existing" />
+		        <f:selectItem itemValue="potential" itemLabel="potential" />
 		    </p:selectOneMenu>
 	        <!-- TODO get parameters to actionListener -->
-	        <p:commandButton value="search" update="#{idPrefix}searchAdd" actionListener="#{addController.findAdds(username, 1)}"></p:commandButton>
+	        <p:commandButton value="search" update="#{idPrefix}searchAdd" actionListener="#{addController.findAdds()}"></p:commandButton>
 	        <p:spacer width="180px" height="20px" />
 			
 			
