@@ -65,6 +65,78 @@ public class UserDao {
 		return docList;
 	}
 
+	
+	
+	
+
+	public ArrayList<Document> getAddsforUserbyFriends(String username, int depth, int numberOfMentioned){
+		
+		ArrayList<String> topicList = new ArrayList<String>();
+		
+	
+		ArrayList<String> friendList;
+		try {
+			
+		
+			
+			GraphDAOImpl graph = new GraphDAOImpl();
+			
+			
+		
+			
+			
+			friendList = graph.friendsList(username, depth);
+		
+		
+		
+			
+			
+		
+			for(String friend: friendList){
+				System.out.println(friend);
+				List<User> userList = getOne(friend);
+				if(userList.size()!=0){
+					User user = userList.get(0);
+				
+					for(Topic topic : user.getTopics() ){
+					
+						if(topic.getCount()>=numberOfMentioned){
+					
+							
+							if(topicList.contains(topic.getName())==false){
+								topicList.add(topic.getName());
+							}
+					
+					}
+				
+				
+					}
+				}
+			}	
+			
+			
+			
+		
+		
+		
+		DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
+		
+		ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
+		
+		return docList;
+		
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	
+	
 	public List<User> getInfluentUsers(int limit){
 		
 		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.totalTweetCount)>100 order by (u.favorites+u.retweets+u.totalTweetCount) desc",User.class).setMaxResults(limit).getResultList();
