@@ -4,8 +4,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import twitter4j.Status;
 import twitter4j.UserMentionEntity;
 import aic2014.tuwien.ac.at.beans.Tweet;
@@ -20,18 +18,20 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
-//@Component
 public class PublicDAOImpl implements IPublicDAO {
 
-	// @Autowired
 	UserDao userDao;
 
-	@Autowired
-	InterestedUsersCalculationService calc;
+	InterestedUsersCalculationService interestedUsersCalculationService;
+
 	MongoClient mongoClient;
 	ServerAddress serverAddress;
 	String[] filter;
 	IGraphDAO graphDao;
+
+	public PublicDAOImpl() {
+
+	}
 
 	public PublicDAOImpl(String[] filter) throws UnknownHostException {
 		serverAddress = new ServerAddress("localhost", 27017);
@@ -145,11 +145,11 @@ public class PublicDAOImpl implements IPublicDAO {
 		System.out.println("finished analyze");
 	}
 
-	private void calculateScores() {
+	public void calculateScores() {
 		System.out.println("starting to calculate scores..");
 
-		calc.calculateFocusedScore(0.5, 1000);
-		calc.calculateBroadScore(0.5);
+		interestedUsersCalculationService.calculateFocusedScore(0.5, 1000);
+		interestedUsersCalculationService.calculateBroadScore(0.5);
 
 	}
 
@@ -260,10 +260,10 @@ public class PublicDAOImpl implements IPublicDAO {
 	}
 
 	public InterestedUsersCalculationService getCalc() {
-		return calc;
+		return interestedUsersCalculationService;
 	}
 
-	public void setCalc(InterestedUsersCalculationService calc) {
-		this.calc = calc;
+	public void setCalc(InterestedUsersCalculationService interestedUsersCalculationService) {
+		this.interestedUsersCalculationService = interestedUsersCalculationService;
 	}
 }

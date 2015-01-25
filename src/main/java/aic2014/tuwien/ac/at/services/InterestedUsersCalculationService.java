@@ -4,18 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import aic2014.tuwien.ac.at.beans.Topic;
 import aic2014.tuwien.ac.at.beans.User;
 import aic2014.tuwien.ac.at.dao.UserDao;
-@Component
+
 public class InterestedUsersCalculationService {
 
-	@Autowired
 	private UserDao userDao;
 
 	public InterestedUsersCalculationService() {
@@ -69,12 +63,12 @@ public class InterestedUsersCalculationService {
 		for (Topic currTopic : user.getTopics()) {
 			double score = (double) currTopic.getCount() / user.getTotalTweetCount();
 			scores.add(score);
-			
-			//System.out.println("Debug> score:" + score);
+
+			// System.out.println("Debug> score:" + score);
 		}
 		double endScore = Collections.max(scores);
 		endScore *= scaleFactor;
-		System.out.println("Debug> endScore: " +endScore);
+		System.out.println("Debug> endScore: " + endScore);
 		user.setFocussedInterestScore(endScore);
 
 		userDao.updateUser(user);

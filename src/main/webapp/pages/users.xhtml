@@ -27,20 +27,20 @@
 		
 			<p:dataTable id="#{idPrefix}searchUser" var="item" value="#{userController.userModel.searchResult}">  
 		        
-		        <p:column headerText="Username">  
-		            <h:outputText value="#{item.col1}" />  
+		        <p:column headerText="Username">
+		            <h:outputText value="#{item.username}" />
 		        </p:column>   
 		  
-		        <p:column headerText="Col 2">  
-		            <h:outputText value="#{item.col2}"/>  
+		        <p:column headerText="Favorites">  
+		            <h:outputText value="#{item.favorites}"/>
 		        </p:column>  
 		  
-		        <p:column headerText="Col 3">  
-		            <h:outputText value="#{item.col3}" />  
+		        <p:column headerText="Followers">  
+		            <h:outputText value="#{item.numOfFollowers}" />
 		        </p:column>  
 		  
-		        <p:column headerText="Col 4">  
-		            <h:outputText value="#{item.col4}" />  
+		        <p:column headerText="Retweets">  
+		            <h:outputText value="#{item.retweets}" />
 		        </p:column>
 	        
 	    	</p:dataTable>

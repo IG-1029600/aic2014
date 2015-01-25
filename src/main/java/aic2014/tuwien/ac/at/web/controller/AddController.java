@@ -24,7 +24,6 @@ public class AddController {
 
 		if (addModel.getInterest().equals("existing")) {
 			addModel.setSearchResult(userDao.getAddsforUser(addModel.getUsername(), 0));
-			// addModel.setSearchResult(null);
 		}
 
 		if (addModel.getInterest().equals("potential")) {

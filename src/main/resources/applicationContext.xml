@@ -10,15 +10,16 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
 
 
+<context:annotation-config /> 
+  	<context:component-scan base-package="aic2014.tuwien.ac.at"/>
+
 	<tx:annotation-driven />
 	<context:annotation-config></context:annotation-config>
 	<bean id="userDao" class="aic2014.tuwien.ac.at.dao.UserDao"></bean>
-	<bean id="publicDAOImpl"
-		class="aic2014.tuwien.ac.at.dao.PublicDAOImpl" autowire="byType">
-	<constructor-arg value="null"></constructor-arg>
-	<property name="userDao" ref="userDao"></property>
-
-	<property name="calc" ref="interestedCalc"></property>
+	<bean id="publicDAOImpl" class="aic2014.tuwien.ac.at.dao.PublicDAOImpl" autowire="byType">
+		<constructor-arg value="null"></constructor-arg>
+		<property name="userDao" ref="userDao"></property>
+		<property name="calc" ref="interestedUsersCalculationService"></property>
 	</bean>
 
 	<bean id="dataSource"
@@ -49,7 +50,7 @@
 		<property name="entityManagerFactory" ref="entityManagerFactory">
 		</property>
 	</bean>
-	<bean id="interestedCalc"
+	<bean id="interestedUsersCalculationService"
 		class="aic2014.tuwien.ac.at.services.InterestedUsersCalculationService">
 	<property name="userDao" ref="userDao"></property>
 	</bean>

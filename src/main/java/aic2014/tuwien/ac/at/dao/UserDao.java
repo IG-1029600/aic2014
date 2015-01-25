@@ -18,6 +18,10 @@ public class UserDao {
 	@PersistenceContext
 	private EntityManager em;
 
+	public UserDao() {
+
+	}
+
 	public Long save(User user) {
 		em.persist(user);
 		return user.getId();
@@ -115,7 +119,7 @@ public class UserDao {
 	}
 
 	public List<User> getInfluentUsers(int limit) {
-
+		System.out.println("#2");
 		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.numOfFollowers)>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc", User.class).setMaxResults(limit).getResultList();
 
 	}
