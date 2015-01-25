@@ -4,7 +4,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import twitter4j.Status;
 import twitter4j.UserMentionEntity;
@@ -19,9 +21,11 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-
+@Component
 public class PublicDAOImpl implements IPublicDAO {
 
+	@Autowired
+	UserDao userDao;
 	MongoClient mongoClient;
 	ServerAddress serverAddress;
 	String[] filter;
@@ -64,6 +68,7 @@ public class PublicDAOImpl implements IPublicDAO {
 		String tps = topics(status.getText());
 		if (tps.isEmpty() == false) {
 			BasicDBObject dbo = new BasicDBObject("tweet", tmp);
+			dbo.append("id", status.getId()); 
 			dbo.append("name", status.getUser().getName());
 			dbo.append("tweetCount" , status.getUser().getStatusesCount());
 			dbo.append("favorites", status.getFavoriteCount());
@@ -122,16 +127,15 @@ public class PublicDAOImpl implements IPublicDAO {
 		while (cursor.hasNext()) {
 			BasicDBObject dbObject = (BasicDBObject) cursor.next();
 			// TODO (Cannot cast dbObject to boolean
-			boolean retweet = false; // (boolean) dbObject.get("retweet");
-			// if (retweet == true) {
-			// insertTweet(dbObject);
-			// insertRetweet(dbObject);
-			// } else {
-			// insertTweet(dbObject);
-			// }
-			
-			
-			
+
+			boolean retweet =  false; //(boolean) dbObject.get("retweet");
+			 //if (retweet == true) {
+			 //insertTweet(dbObject);
+			 //insertRetweet(dbObject);
+			 //} else {
+			 //insertTweet(dbObject);
+			 //}
+
 			graphService.processDbObject(dbObject);
 		}
 		
@@ -149,8 +153,7 @@ public class PublicDAOImpl implements IPublicDAO {
 	}
 
 	private void insertTweet(BasicDBObject dbObject) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		UserDao userDao = (UserDao) context.getBean("userDao");
+		
 		List<User> users = userDao.getOne(dbObject.getString("name"));
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
@@ -174,12 +177,10 @@ public class PublicDAOImpl implements IPublicDAO {
 			userDao.updateUser(user);
 
 		}
-		context.close();
 	}
 
 	private void insertRetweet(BasicDBObject dbObject) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		UserDao userDao = (UserDao) context.getBean("userDao");
+		
 		List<User> users = userDao.getOne(dbObject.getString("retweetUsername"));
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
@@ -214,7 +215,6 @@ public class PublicDAOImpl implements IPublicDAO {
 			user.setTopics(topicDaoImpl.updateTopic(dbObject.getString("topics"), user.getTopics(), user));
 			userDao.updateUser(user);
 		}
-		context.close();
 	}
 
 	private User createUser(String name, int fav, int retweets) {
@@ -244,5 +244,13 @@ public class PublicDAOImpl implements IPublicDAO {
 			user = user + um.getName() + ";";
 		}
 		return user;
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 }

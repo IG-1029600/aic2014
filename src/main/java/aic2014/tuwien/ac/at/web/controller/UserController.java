@@ -40,6 +40,12 @@ public class UserController {
 		// userModel.setSearchResult(userService.findUsers());
 	}
 
+	public void findInfluentUsers(int amount) {
+
+		userDao.getInfluentUsers(amount);
+
+		// userModel.setSearchResult(userService.findUsers());
+	}
 	public UserModel getUserModel() {
 		return userModel;
 	}

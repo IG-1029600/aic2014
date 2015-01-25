@@ -11,6 +11,10 @@
 	<tx:annotation-driven />
 	<context:annotation-config></context:annotation-config>
 	<bean id="userDao" class="aic2014.tuwien.ac.at.dao.UserDao"></bean>
+		<bean id="publicDAOImpl" class="aic2014.tuwien.ac.at.dao.PublicDAOImpl">
+	<constructor-arg value="null"></constructor-arg>
+	<property name="userDao" ref="userDao"></property>
+	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.h2.Driver"></property>
