@@ -67,11 +67,11 @@ public class UserDao {
 
 	public List<User> getInfluentUsers(int limit){
 		
-		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.totalTweetCount)>100 order by (u.favorites+u.retweets+u.totalTweetCount) desc",User.class).setMaxResults(limit).getResultList();
+		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.numOfFollowers)>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc",User.class).setMaxResults(limit).getResultList();
 	}
 	public List<User> findUsersInterestedFocused(int count) {
 
-		return em.createQuery("SELECT u FROM User u ORDER BY u.focussedInterestScore DESC LIMIT " + count, User.class)
+		return em.createQuery("SELECT u FROM User u ORDER BY u.focussedInterestScore desc", User.class).setMaxResults(count)
 				.getResultList();
 	}
 
@@ -79,7 +79,7 @@ public class UserDao {
 
 		//SELECT u FROM User u ORDER BY u.broadInterestScore DESC LIMIT
 		
-		return em.createQuery("SELECT u FROM User u u.broadInterestScore DESC LIMIT " + count, User.class)
+		return em.createQuery("SELECT u FROM User u order by u.broadInterestScore desc", User.class).setMaxResults(count)
 				.getResultList();
 	}
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
@@ -11,9 +13,11 @@
 	<tx:annotation-driven />
 	<context:annotation-config></context:annotation-config>
 	<bean id="userDao" class="aic2014.tuwien.ac.at.dao.UserDao"></bean>
-		<bean id="publicDAOImpl" class="aic2014.tuwien.ac.at.dao.PublicDAOImpl">
+	<bean id="publicDAOImpl"
+		class="aic2014.tuwien.ac.at.dao.PublicDAOImpl" autowire="byType">
 	<constructor-arg value="null"></constructor-arg>
 	<property name="userDao" ref="userDao"></property>
+	<property name="calc" ref="interestedCalc"></property>
 	</bean>
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -42,5 +46,9 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory">
 		</property>
+	</bean>
+	<bean id="interestedCalc"
+		class="aic2014.tuwien.ac.at.services.InterestedUsersCalculationService">
+	<property name="userDao" ref="userDao"></property>
 	</bean>
 </beans>

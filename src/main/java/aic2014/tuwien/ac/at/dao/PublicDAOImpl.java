@@ -26,6 +26,9 @@ public class PublicDAOImpl implements IPublicDAO {
 
 	@Autowired
 	UserDao userDao;
+	
+	@Autowired
+	InterestedUsersCalculationService calc;
 	MongoClient mongoClient;
 	ServerAddress serverAddress;
 	String[] filter;
@@ -71,6 +74,7 @@ public class PublicDAOImpl implements IPublicDAO {
 			dbo.append("id", status.getId()); 
 			dbo.append("name", status.getUser().getName());
 			dbo.append("tweetCount" , status.getUser().getStatusesCount());
+			dbo.append("numOfFollowers", status.getUser().getFollowersCount());
 			dbo.append("favorites", status.getFavoriteCount());
 			dbo.append("retweets", status.getRetweetCount());
 
@@ -139,15 +143,15 @@ public class PublicDAOImpl implements IPublicDAO {
 			graphService.processDbObject(dbObject);
 		}
 		
-		calculateScores();
+		
 		
 		System.out.println("finished analyze");
 	}
 	
-	private void calculateScores(){	
+	public void calculateScores(){	
 		System.out.println("starting to calculate scores..");
-		InterestedUsersCalculationService calc = new InterestedUsersCalculationService();
-		calc.calculateFocusedScore(0.5);
+		
+		calc.calculateFocusedScore(0.5, 1000);
 		calc.calculateBroadScore(0.5);
 		
 	}
@@ -159,6 +163,8 @@ public class PublicDAOImpl implements IPublicDAO {
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
 		if (users.size() == 0) {
 			User nUser = createUser(dbObject.getString("name"), dbObject.getInt("favorites"), dbObject.getInt("retweets"));
+			nUser.setTotalTweetCount(dbObject.getInt("tweetCount"));
+			nUser.setNumOfFollowers(dbObject.getInt("numOfFollowers"));
 			userDao.save(nUser);
 			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("favorites"), dbObject.getInt("retweets"), dbObject.getLong("id")));
 			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"), nUser));
@@ -186,6 +192,8 @@ public class PublicDAOImpl implements IPublicDAO {
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
 		if (users.size() == 0) {
 			User nUser = createUser(dbObject.getString("retweetUsername"), dbObject.getInt("retweets-favorites"), dbObject.getInt("retweets-number"));
+			nUser.setTotalTweetCount(dbObject.getInt("tweetCount"));
+			nUser.setNumOfFollowers(dbObject.getInt("numOfFollowers"));
 			userDao.save(nUser);
 			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("retweets-favorites"), dbObject.getInt("retweets-number"), dbObject.getLong("retweetid")));
 			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"), nUser));
@@ -252,5 +260,13 @@ public class PublicDAOImpl implements IPublicDAO {
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
+	}
+
+	public InterestedUsersCalculationService getCalc() {
+		return calc;
+	}
+
+	public void setCalc(InterestedUsersCalculationService calc) {
+		this.calc = calc;
 	}
 }

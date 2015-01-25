@@ -4,19 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import aic2014.tuwien.ac.at.beans.Topic;
 import aic2014.tuwien.ac.at.beans.User;
 import aic2014.tuwien.ac.at.dao.UserDao;
-
+@Component
 public class InterestedUsersCalculationService {
 
+	@Autowired
 	private UserDao userDao;
 
 	public InterestedUsersCalculationService() {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		userDao = (UserDao) context.getBean("userDao");
 	}
 
 	public List<User> calculateFocusedScoreAndGetUsers(int count, double alphaParam) {
@@ -45,7 +47,7 @@ public class InterestedUsersCalculationService {
 		return users.subList(0, count);
 	}
 
-	public void calculateFocusedScore(double alphaParam) {
+	public void calculateFocusedScore(double alphaParam, int scaleFactor) {
 
 		if (alphaParam <= 0) {
 			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
@@ -56,22 +58,26 @@ public class InterestedUsersCalculationService {
 
 		for (User currUser : users) {
 
-			calculateFocusedScoreForUser(currUser);
+			calculateFocusedScoreForUser(currUser, scaleFactor);
 		}
 	}
 
-	private User calculateFocusedScoreForUser(User user) {
+	private User calculateFocusedScoreForUser(User user, int scaleFactor) {
 
 		List<Double> scores = new ArrayList<>();
 
 		for (Topic currTopic : user.getTopics()) {
-			double score = currTopic.getCount() / user.getTotalTweetCount();
+			double score = (double) currTopic.getCount() / user.getTotalTweetCount();
 			scores.add(score);
+			
+			//System.out.println("Debug> score:" + score);
 		}
+		double endScore = Collections.max(scores);
+		endScore *= scaleFactor;
+		System.out.println("Debug> endScore: " +endScore);
+		user.setFocussedInterestScore(endScore);
 
-		user.setFocussedInterestScore(Collections.max(scores));
-
-		// userDao.updateUser(user);
+		userDao.updateUser(user);
 		return user;
 	}
 
@@ -126,6 +132,7 @@ public class InterestedUsersCalculationService {
 		double score = userTopics / (user.getTotalTweetCount() * alphaParam);
 
 		user.setBroadInterestScore(score);
+		userDao.updateUser(user);
 		return user;
 	}
 
@@ -138,6 +145,14 @@ public class InterestedUsersCalculationService {
 
 		// max( t1Count/TotTweetCount ... tnCount/TotTweetCount )
 		return userDao.findUsersInterestedFocused(count);
+	}
+
+	public UserDao getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserDao userDao) {
+		this.userDao = userDao;
 	}
 
 }

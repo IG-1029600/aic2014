@@ -35,7 +35,7 @@ public class App {
 			PublicDAOImpl publicDao =(PublicDAOImpl) context.getBean("publicDAOImpl");
 
 			//publicDao.analyze();
-
+			//publicDao.calculateScores();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

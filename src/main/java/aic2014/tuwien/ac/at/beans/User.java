@@ -20,6 +20,7 @@ public class User {
 	private int favorites;
 	private int retweets;
 	private int totalTweetCount;
+	private int numOfFollowers;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Tweet> tweets;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.EAGER)
@@ -143,6 +144,14 @@ public class User {
 			return res;
 		}
 
+	}
+
+	public int getNumOfFollowers() {
+		return numOfFollowers;
+	}
+
+	public void setNumOfFollowers(int numOfFollowers) {
+		this.numOfFollowers = numOfFollowers;
 	}
 
 }
