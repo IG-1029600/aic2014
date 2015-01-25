@@ -111,7 +111,6 @@ public class UserDao {
 			return docList;
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -126,13 +125,13 @@ public class UserDao {
 
 	public List<User> findUsersInterestedFocused(int count) {
 
-		return em.createQuery("SELECT u FROM User u ORDER BY u.focussedInterestScore desc", User.class).setMaxResults(count).getResultList();
+		return em.createQuery("SELECT u FROM User u WHERE u.totalTweetCount>100 ORDER BY u.focussedInterestScore desc", User.class).setMaxResults(count).getResultList();
 	}
 
 	public List<User> findUsersInterestedInBroadRangeOfTopics(int count) {
 
 		// SELECT u FROM User u ORDER BY u.broadInterestScore DESC LIMIT
 
-		return em.createQuery("SELECT u FROM User u order by u.broadInterestScore desc", User.class).setMaxResults(count).getResultList();
+		return em.createQuery("SELECT u FROM User u WHERE u.totalTweetCount>100 order by u.broadInterestScore desc", User.class).setMaxResults(count).getResultList();
 	}
 }

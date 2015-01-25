@@ -41,8 +41,6 @@ public class PublicDAOImpl implements IPublicDAO {
 		List<MongoCredential> auths = new ArrayList<MongoCredential>();
 		auths.add(creds);
 
-		// graphDao = new GraphDAOImpl();
-
 	}
 
 	public void displayMongoDB() {
@@ -129,7 +127,6 @@ public class PublicDAOImpl implements IPublicDAO {
 		DBCursor cursor = dbCollection.find();
 		while (cursor.hasNext()) {
 			BasicDBObject dbObject = (BasicDBObject) cursor.next();
-			// TODO (Cannot cast dbObject to boolean
 
 			boolean retweet = (boolean) dbObject.get("retweet");
 			if (retweet == true) {
@@ -149,7 +146,7 @@ public class PublicDAOImpl implements IPublicDAO {
 		System.out.println("starting to calculate scores..");
 
 		interestedUsersCalculationService.calculateFocusedScore(0.5, 1000);
-		interestedUsersCalculationService.calculateBroadScore(0.5);
+		interestedUsersCalculationService.calculateBroadScore(0.2);
 
 	}
 
@@ -159,11 +156,13 @@ public class PublicDAOImpl implements IPublicDAO {
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
 		if (users.size() == 0) {
-			User nUser = createUser(dbObject.getString("name"), dbObject.getInt("favorites"), dbObject.getInt("retweets"));
+			User nUser = createUser(dbObject.getString("name"), dbObject.getInt("favorites"),
+					dbObject.getInt("retweets"));
 			nUser.setTotalTweetCount(dbObject.getInt("tweetCount"));
 			nUser.setNumOfFollowers(dbObject.getInt("numOfFollowers"));
 			userDao.save(nUser);
-			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("favorites"), dbObject.getInt("retweets"), dbObject.getLong("id")));
+			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("favorites"), dbObject.getInt("retweets"),
+					dbObject.getLong("id")));
 			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"), nUser));
 
 			userDao.updateUser(nUser);
@@ -174,7 +173,8 @@ public class PublicDAOImpl implements IPublicDAO {
 			user.setFavorites(user.getFavorites() + dbObject.getInt("favorites"));
 			user.setRetweets(user.getRetweets() + dbObject.getInt("retweets"));
 			List<Tweet> tweets = user.getTweets();
-			tweets.add(tweetDaoImpl.addTweet(user, dbObject.getInt("favorites"), dbObject.getInt("retweets"), dbObject.getLong("id")));
+			tweets.add(tweetDaoImpl.addTweet(user, dbObject.getInt("favorites"), dbObject.getInt("retweets"),
+					dbObject.getLong("id")));
 			user.setTweets(tweets);
 			user.setTopics(topicDaoImpl.updateTopic(dbObject.getString("topics"), user.getTopics(), user));
 			userDao.updateUser(user);
@@ -188,11 +188,13 @@ public class PublicDAOImpl implements IPublicDAO {
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
 		if (users.size() == 0) {
-			User nUser = createUser(dbObject.getString("retweetUsername"), dbObject.getInt("retweets-favorites"), dbObject.getInt("retweets-number"));
+			User nUser = createUser(dbObject.getString("retweetUsername"), dbObject.getInt("retweets-favorites"),
+					dbObject.getInt("retweets-number"));
 			nUser.setTotalTweetCount(dbObject.getInt("tweetCount"));
 			nUser.setNumOfFollowers(dbObject.getInt("numOfFollowers"));
 			userDao.save(nUser);
-			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("retweets-favorites"), dbObject.getInt("retweets-number"), dbObject.getLong("retweetid")));
+			nUser.setTweets(tweetDaoImpl.createTweets(nUser, dbObject.getInt("retweets-favorites"),
+					dbObject.getInt("retweets-number"), dbObject.getLong("retweetid")));
 			nUser.setTopics(topicDaoImpl.createTopic(dbObject.getString("topics"), nUser));
 			userDao.updateUser(nUser);
 
@@ -203,7 +205,8 @@ public class PublicDAOImpl implements IPublicDAO {
 			if (ttweet == null) {
 				user.setFavorites(user.getFavorites() + dbObject.getInt("retweets-favorites"));
 				user.setRetweets(user.getRetweets() + dbObject.getInt("retweets-number"));
-				user.setTweets(tweetDaoImpl.createTweets(user, dbObject.getInt("retweets-favorites"), dbObject.getInt("retweets-number"), dbObject.getLong("retweetid")));
+				user.setTweets(tweetDaoImpl.createTweets(user, dbObject.getInt("retweets-favorites"),
+						dbObject.getInt("retweets-number"), dbObject.getLong("retweetid")));
 
 			} else {
 				int retweets = user.getRetweets() + (dbObject.getInt("retweets-number") - ttweet.getRetweets());

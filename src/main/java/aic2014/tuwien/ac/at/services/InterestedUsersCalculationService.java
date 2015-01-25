@@ -15,32 +15,6 @@ public class InterestedUsersCalculationService {
 	public InterestedUsersCalculationService() {
 	}
 
-	public List<User> calculateFocusedScoreAndGetUsers(int count, double alphaParam) {
-
-		if (alphaParam <= 0) {
-			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
-			return new ArrayList<User>();
-		}
-
-		List<User> users = userDao.getAll();
-
-		for (User currUser : users) {
-
-			List<Double> scores = new ArrayList<>();
-
-			for (Topic currTopic : currUser.getTopics()) {
-				double score = currTopic.getCount() / (currUser.getTotalTweetCount() * alphaParam);
-				scores.add(score);
-			}
-
-			currUser.setFocussedInterestScore(Collections.max(scores));
-		}
-
-		Collections.sort(users, new User.UserFocussedInterestScoreComparator());
-
-		return users.subList(0, count);
-	}
-
 	public void calculateFocusedScore(double alphaParam, int scaleFactor) {
 
 		if (alphaParam <= 0) {
@@ -66,31 +40,15 @@ public class InterestedUsersCalculationService {
 
 			// System.out.println("Debug> score:" + score);
 		}
+		if (scores.isEmpty()) {
+			return user;
+		}
 		double endScore = Collections.max(scores);
 		endScore *= scaleFactor;
 		System.out.println("Debug> endScore: " + endScore);
 		user.setFocussedInterestScore(endScore);
 
 		userDao.updateUser(user);
-		return user;
-	}
-
-	private User calculateFocusedScoreForUser(User user, double alphaParam) {
-		if (alphaParam <= 0) {
-			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
-			return user;
-		}
-
-		List<Double> scores = new ArrayList<>();
-
-		for (Topic currTopic : user.getTopics()) {
-			double score = currTopic.getCount() / (user.getTotalTweetCount() * alphaParam);
-			scores.add(score);
-		}
-
-		user.setFocussedInterestScore(Collections.max(scores));
-
-		// userDao.updateUser(user);
 		return user;
 	}
 
@@ -103,16 +61,6 @@ public class InterestedUsersCalculationService {
 		for (User currUser : userDao.getAll()) {
 			calculateBroadScoreForUser(currUser, alphaParam);
 		}
-	}
-
-	private User calculateBroadScoreForUser(User user) {
-
-		int userTopics = user.getTopics().size();
-
-		double score = userTopics / user.getTotalTweetCount();
-
-		user.setBroadInterestScore(score);
-		return user;
 	}
 
 	private User calculateBroadScoreForUser(User user, double alphaParam) {
@@ -128,6 +76,33 @@ public class InterestedUsersCalculationService {
 		user.setBroadInterestScore(score);
 		userDao.updateUser(user);
 		return user;
+	}
+
+	@Deprecated
+	public List<User> calculateFocusedScoreAndGetUsers(int count, double alphaParam) {
+
+		if (alphaParam <= 0) {
+			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
+			return new ArrayList<User>();
+		}
+
+		List<User> users = userDao.getAll();
+
+		for (User currUser : users) {
+
+			List<Double> scores = new ArrayList<>();
+
+			for (Topic currTopic : currUser.getTopics()) {
+				double score = currTopic.getCount() / (currUser.getTotalTweetCount() * alphaParam);
+				scores.add(score);
+			}
+
+			currUser.setFocussedInterestScore(Collections.max(scores));
+		}
+
+		Collections.sort(users, new User.UserFocussedInterestScoreComparator());
+
+		return users.subList(0, count);
 	}
 
 	public List<User> findUsersInterestedInBroadRangeOfTopics(int count) {

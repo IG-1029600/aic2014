@@ -1,13 +1,15 @@
 package aic2014.tuwien.ac.at.dao;
 
-import com.mongodb.BasicDBObject;
+import java.util.ArrayList;
+
+import aic2014.tuwien.ac.at.beans.TopicNode;
+import aic2014.tuwien.ac.at.beans.UserNode;
 
 public interface IGraphDAO {
 
-	//void processDbObject(BasicDBObject dbObject);
+	public UserNode createUserNode(String username);
 
-	void insertRelationShip();
+	public ArrayList<String> friendsList(String name, int depth);
 
-	void deleteNode();
-
+	public TopicNode createTopicNode(String topicName);
 }

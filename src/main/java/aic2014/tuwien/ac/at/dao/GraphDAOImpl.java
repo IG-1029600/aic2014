@@ -22,8 +22,7 @@ import org.neo4j.helpers.collection.IteratorUtil;
 import aic2014.tuwien.ac.at.beans.TopicNode;
 import aic2014.tuwien.ac.at.beans.UserNode;
 
-//TODO update interface in the end
-public class GraphDAOImpl {// implements IGraphDAO {
+public class GraphDAOImpl implements IGraphDAO {
 
 	public GraphDatabaseService graphDb = null;
 	public static String DB_PATH = "database/neo4j/";
@@ -107,7 +106,8 @@ public class GraphDAOImpl {// implements IGraphDAO {
 
 			for (Node start : IteratorUtil.asIterable(n_column)) {
 
-				for (Node node : graphDb.traversalDescription().depthFirst().relationships(RelTypes.FRIEND).evaluator(Evaluators.toDepth(depth)).traverse(start).nodes()) {
+				for (Node node : graphDb.traversalDescription().depthFirst().relationships(RelTypes.FRIEND)
+						.evaluator(Evaluators.toDepth(depth)).traverse(start).nodes()) {
 
 					friendList.add((String) node.getProperty("name"));
 				}
@@ -151,16 +151,6 @@ public class GraphDAOImpl {// implements IGraphDAO {
 		System.out.println("created " + topicNode);
 
 		return topicNode;
-	}
-
-	public void insertRelationShip() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void deleteNode() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private static void registerShutdownHook(final GraphDatabaseService graphDb) {

@@ -24,14 +24,14 @@ public class App {
 		// userDao.save(ivan);
 		// userDao.save(peter);
 
-		List<User> users = userDao.getInfluentUsers(10);
-		for (User user : users) {
-			System.out.println(user.getUsername());
-		}
+//		List<User> users = userDao.getInfluentUsers(10);
+//		for (User user : users) {
+//			System.out.println(user.getUsername());
+//		}
 
 		PublicStreamService streamService = new PublicStreamService();
 
-		// streamService.listenToStream();
+		streamService.listenToStream();
 
 		try {
 			PublicDAOImpl publicDao = (PublicDAOImpl) context.getBean("publicDAOImpl");
@@ -39,11 +39,11 @@ public class App {
 			// publicDao.analyze();
 			// publicDao.calculateScores();
 
-			DocumentStoreDAOImpl docDao = new DocumentStoreDAOImpl();
+			//DocumentStoreDAOImpl docDao = new DocumentStoreDAOImpl();
 
-			Document document = new Document("name", "company", "filepath", "art", "homepage");
+			//Document document = new Document("name", "company", "filepath", "art", "homepage");
 
-			docDao.createDocument(document);
+			//docDao.createDocument(document);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -27,20 +27,32 @@
 		
 			<p:dataTable id="#{idPrefix}searchUser" var="item" value="#{userController.userModel.searchResult}">  
 		        
-		        <p:column headerText="Username" rendered="#{userModel.type eq 'most'}">
+		        <p:column headerText="Username" >
 		            <h:outputText value="#{item.username}" />
 		        </p:column>   
 		  
-		        <p:column headerText="Favorites">  
+		        <p:column headerText="Favorites" rendered="#{userModel.type eq 'most'}">  
 		            <h:outputText value="#{item.favorites}"/>
 		        </p:column>  
 		  
-		        <p:column headerText="Followers">  
+		        <p:column headerText="Followers" rendered="#{userModel.type eq 'most'}">  
 		            <h:outputText value="#{item.numOfFollowers}" />
 		        </p:column>  
 		  
-		        <p:column headerText="Retweets">  
+		        <p:column headerText="Retweets" rendered="#{userModel.type eq 'most'}">  
 		            <h:outputText value="#{item.retweets}" />
+		        </p:column>
+		        
+		        <p:column headerText="Total Tweet Count" rendered="#{userModel.type eq 'broad' or userModel.type eq 'focused'}">  
+		            <h:outputText value="#{item.totalTweetCount}" />
+		        </p:column>
+		        
+		        <p:column headerText="Score" rendered="#{userModel.type eq 'broad'}">  
+		            <h:outputText value="#{item.broadInterestScore}" />
+		        </p:column>
+		        
+		        <p:column headerText="Score" rendered="#{userModel.type eq 'focused'}">  
+		            <h:outputText value="#{item.focussedInterestScore}" />
 		        </p:column>
 	        
 	    	</p:dataTable>
