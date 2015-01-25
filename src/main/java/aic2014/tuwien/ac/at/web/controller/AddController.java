@@ -5,7 +5,6 @@ import javax.inject.Named;
 
 import org.springframework.context.annotation.Scope;
 
-import aic2014.tuwien.ac.at.dao.UserDao;
 import aic2014.tuwien.ac.at.web.model.AddModel;
 
 @Named
@@ -15,15 +14,11 @@ public class AddController {
 	@Inject
 	private AddModel addModel;
 
-	@Inject
-	private UserDao userDao;
+	public void findAdds() {
 
-	private String username;
-	private int amount;
+		System.out.println("username:" + addModel.getUsername() + " interest:" + addModel.getInterest());
 
-	public void findAdds(String username, int amount) {
-
-		addModel.setSearchResult(userDao.getAddsforUser(username, amount));
+		// addModel.setSearchResult(userDao.getAddsforUser(addModel, amount));
 	}
 
 	public AddModel getAddModel() {
@@ -32,22 +27,6 @@ public class AddController {
 
 	public void setAddModel(AddModel addModel) {
 		this.addModel = addModel;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
 	}
 
 }

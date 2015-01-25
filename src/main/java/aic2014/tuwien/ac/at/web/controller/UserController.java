@@ -23,6 +23,7 @@ public class UserController {
 
 	public void findUsers() {
 
+		System.out.println("QueryType:" + userModel.getType() + " amount:" + userModel.getAmount());
 		// userModel.setSearchResult(userService.findUsers());
 	}
 	
@@ -35,12 +36,6 @@ public class UserController {
 	public void findInterestedBroadUsers(int amount) {
 
 		userDao.findUsersInterestedInBroadRangeOfTopics(amount);
-		// userModel.setSearchResult(userService.findUsers());
-	}
-
-	public void findInfluentUsers(int amount) {
-
-		// userModel.setSearchResult();
 
 		// userModel.setSearchResult(userService.findUsers());
 	}

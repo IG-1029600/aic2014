@@ -12,28 +12,10 @@
 <h:body>
 	<h:panelGroup layout="block"
 		style="padding-left:1%; padding-right:1%;min-width:720px;">
-		<h:panelGroup layout="block" style="margin-top: 25px;margin-bottom: 15px;">
+		<h:panelGroup layout="block" style="margin-top: 25px;margin-bottom: 15px;height:50px">
 			<h:panelGroup style="top:10px;text-align:left;position:absolute">
 				<p:graphicImage value="/resources/images/image.png" />
 			</h:panelGroup>
-			<h:form>
-				<h:panelGroup id="panelLogin">
-					<h:panelGroup rendered="#{!loginController.loginModel.login}" layout="block"
-						style="text-align:right">
-						<p:inputText placeholder="Login" style="margin-right:5px"></p:inputText>
-						<p:password placeholder="Passwort" style="margin-right:5px"></p:password>
-						<p:commandButton value="Anmelden"
-							action="#{loginController.doLogin}" update="panelLogin,:panel"
-							style="margin-left:5px"></p:commandButton>
-					</h:panelGroup>
-					<h:panelGroup rendered="#{loginController.loginModel.login}" layout="block"
-						style="text-align:right">
-						<p:commandButton value="Abmelden"
-							action="#{loginController.doLogout}" update="panelLogin,:panel"
-							style="margin-left:5px"></p:commandButton>
-					</h:panelGroup>
-				</h:panelGroup>
-			</h:form>
 		</h:panelGroup>
 		<h:panelGroup id="panel" layout="block">
 			<h:form id = "form">
@@ -52,8 +34,8 @@
 							<ui:include src="/pages/users.xhtml" />
 						</h:panelGroup>
 					</p:tab>
-					<p:tab title="Adds" closable="false">
-						<h:panelGroup id="adds">
+					<p:tab title="Ads" closable="false">
+						<h:panelGroup id="ads">
 							<ui:include src="/pages/adds.xhtml" />
 						</h:panelGroup>
 					</p:tab>
