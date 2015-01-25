@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
 import twitter4j.Status;
 import twitter4j.UserMentionEntity;
@@ -21,12 +19,13 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-@Component
+
+//@Component
 public class PublicDAOImpl implements IPublicDAO {
 
-	@Autowired
+	// @Autowired
 	UserDao userDao;
-	
+
 	@Autowired
 	InterestedUsersCalculationService calc;
 	MongoClient mongoClient;
@@ -71,9 +70,9 @@ public class PublicDAOImpl implements IPublicDAO {
 		String tps = topics(status.getText());
 		if (tps.isEmpty() == false) {
 			BasicDBObject dbo = new BasicDBObject("tweet", tmp);
-			dbo.append("id", status.getId()); 
+			dbo.append("id", status.getId());
 			dbo.append("name", status.getUser().getName());
-			dbo.append("tweetCount" , status.getUser().getStatusesCount());
+			dbo.append("tweetCount", status.getUser().getStatusesCount());
 			dbo.append("numOfFollowers", status.getUser().getFollowersCount());
 			dbo.append("favorites", status.getFavoriteCount());
 			dbo.append("retweets", status.getRetweetCount());
@@ -133,31 +132,29 @@ public class PublicDAOImpl implements IPublicDAO {
 			// TODO (Cannot cast dbObject to boolean
 
 			boolean retweet = (boolean) dbObject.get("retweet");
-			 if (retweet == true) {
-			 insertTweet(dbObject);
-			 insertRetweet(dbObject);
-			 } else {
-			 insertTweet(dbObject);
-			 }
+			if (retweet == true) {
+				insertTweet(dbObject);
+				insertRetweet(dbObject);
+			} else {
+				insertTweet(dbObject);
+			}
 
 			graphService.processDbObject(dbObject);
 		}
-		
-		
-		
+
 		System.out.println("finished analyze");
 	}
-	
-	public void calculateScores(){	
+
+	private void calculateScores() {
 		System.out.println("starting to calculate scores..");
-		
+
 		calc.calculateFocusedScore(0.5, 1000);
 		calc.calculateBroadScore(0.5);
-		
+
 	}
 
 	private void insertTweet(BasicDBObject dbObject) {
-		
+
 		List<User> users = userDao.getOne(dbObject.getString("name"));
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();
@@ -186,7 +183,7 @@ public class PublicDAOImpl implements IPublicDAO {
 	}
 
 	private void insertRetweet(BasicDBObject dbObject) {
-		
+
 		List<User> users = userDao.getOne(dbObject.getString("retweetUsername"));
 		TweetDaoImpl tweetDaoImpl = new TweetDaoImpl();
 		TopicDaoImpl topicDaoImpl = new TopicDaoImpl();

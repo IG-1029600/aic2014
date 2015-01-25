@@ -1,6 +1,5 @@
 package aic2014.tuwien.ac.at.dao;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +55,10 @@ public class UserDao {
 
 			}
 
+			if (topic != null && topic.getName() != null) {
+				System.out.println("Topic: " + topic.getName());
+			}
+
 		}
 
 		DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
@@ -65,94 +68,67 @@ public class UserDao {
 		return docList;
 	}
 
-	
-	
-	
+	public ArrayList<Document> getAddsforUserbyFriends(String username, int depth, int numberOfMentioned) {
 
-	public ArrayList<Document> getAddsforUserbyFriends(String username, int depth, int numberOfMentioned){
-		
+		System.out.println("getAddsforUserbyFriends() called");
 		ArrayList<String> topicList = new ArrayList<String>();
-		
-	
+
 		ArrayList<String> friendList;
 		try {
-			
-		
-			
+
 			GraphDAOImpl graph = new GraphDAOImpl();
-			
-			
-		
-			
-			
+
 			friendList = graph.friendsList(username, depth);
-		
-		
-		
-			
-			
-		
-			for(String friend: friendList){
+
+			for (String friend : friendList) {
 				System.out.println(friend);
 				List<User> userList = getOne(friend);
-				if(userList.size()!=0){
+				if (userList.size() != 0) {
 					User user = userList.get(0);
-				
-					for(Topic topic : user.getTopics() ){
-					
-						if(topic.getCount()>=numberOfMentioned){
-					
-							
-							if(topicList.contains(topic.getName())==false){
+
+					for (Topic topic : user.getTopics()) {
+
+						if (topic.getCount() >= numberOfMentioned) {
+
+							if (topicList.contains(topic.getName()) == false) {
 								topicList.add(topic.getName());
 							}
-					
-					}
-				
-				
+
+						}
+
 					}
 				}
-			}	
-			
-			
-			
-		
-		
-		
-		DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
-		
-		ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
-		
-		return docList;
-		
-			
-			
+			}
+
+			DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
+
+			ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
+
+			return docList;
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
-	
-	
-	
-	public List<User> getInfluentUsers(int limit){
-		
-		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.numOfFollowers)>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc",User.class).setMaxResults(limit).getResultList();
+
+	public List<User> getInfluentUsers(int limit) {
+
+		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.numOfFollowers)>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc", User.class).setMaxResults(limit).getResultList();
+
 	}
+
 	public List<User> findUsersInterestedFocused(int count) {
 
-		return em.createQuery("SELECT u FROM User u ORDER BY u.focussedInterestScore desc", User.class).setMaxResults(count)
-				.getResultList();
+		return em.createQuery("SELECT u FROM User u ORDER BY u.focussedInterestScore desc", User.class).setMaxResults(count).getResultList();
 	}
 
 	public List<User> findUsersInterestedInBroadRangeOfTopics(int count) {
 
-		//SELECT u FROM User u ORDER BY u.broadInterestScore DESC LIMIT
-		
-		return em.createQuery("SELECT u FROM User u order by u.broadInterestScore desc", User.class).setMaxResults(count)
-				.getResultList();
-	}
+		// SELECT u FROM User u ORDER BY u.broadInterestScore DESC LIMIT
 
+		return em.createQuery("SELECT u FROM User u order by u.broadInterestScore desc", User.class).setMaxResults(count).getResultList();
+	}
 }

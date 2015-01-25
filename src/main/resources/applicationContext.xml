@@ -17,8 +17,10 @@
 		class="aic2014.tuwien.ac.at.dao.PublicDAOImpl" autowire="byType">
 	<constructor-arg value="null"></constructor-arg>
 	<property name="userDao" ref="userDao"></property>
+
 	<property name="calc" ref="interestedCalc"></property>
 	</bean>
+
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="org.h2.Driver"></property>

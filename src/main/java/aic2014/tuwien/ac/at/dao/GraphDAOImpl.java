@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.javacompat.ExecutionResult;
 //import org.neo4j.cypher.ExecutionEngine;
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -16,11 +17,10 @@ import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.traversal.Evaluators;
-import org.neo4j.cypher.javacompat.ExecutionResult;
-import aic2014.tuwien.ac.at.beans.TopicNode;
-import aic2014.tuwien.ac.at.beans.UserNode;
 import org.neo4j.helpers.collection.IteratorUtil;
 
+import aic2014.tuwien.ac.at.beans.TopicNode;
+import aic2014.tuwien.ac.at.beans.UserNode;
 
 //TODO update interface in the end
 public class GraphDAOImpl {// implements IGraphDAO {
@@ -84,61 +84,50 @@ public class GraphDAOImpl {// implements IGraphDAO {
 		return userNode;
 	}
 
-	
-	public ArrayList<String> friendsList(String name, int depth){
-		
-		
-		
+	public ArrayList<String> friendsList(String name, int depth) {
+
+		System.out.println("friendsList() called");
 
 		ExecutionResult result;
-		
-		
-		
-		try(Transaction tx = graphDb.beginTx()){
-			
+
+		try (Transaction tx = graphDb.beginTx()) {
+
 			ArrayList<String> friendList = new ArrayList<String>();
-			
-			result = engine.execute( "match (n {name: '"+name+"'}) return n" );	
-			
-			 Iterator<Node> n_column = result.columnAs( "n" );
-			 
-		
-			 
-			 for ( Node start : IteratorUtil.asIterable( n_column ) ){
-		
-				 for ( Node node : graphDb.traversalDescription()
-							.depthFirst()
-							.relationships( RelTypes.FRIEND)
-							.evaluator( Evaluators.toDepth( depth ) )
-							.traverse(start)
-							.nodes())
-						{
-					 		
-							friendList.add((String) node.getProperty("name"));
-						}
-				 
-				 
+
+			// result = engine.execute("MATCH (n:`User`) RETURN n");
+
+			String queryString = "MATCH (n:User {name: {name}}) RETURN n";
+			Map<String, Object> parameters = new HashMap<>();
+			parameters.put("name", name);
+			result = engine.execute(queryString, parameters);
+
+			// System.out.println(result.dumpToString());
+
+			Iterator<Node> n_column = result.columnAs("n");
+
+			for (Node start : IteratorUtil.asIterable(n_column)) {
+
+				for (Node node : graphDb.traversalDescription().depthFirst().relationships(RelTypes.FRIEND).evaluator(Evaluators.toDepth(depth)).traverse(start).nodes()) {
+
+					friendList.add((String) node.getProperty("name"));
+				}
+
 			}
-			
-			
-		
-			 tx.success();
-			
-			 return friendList;
-		
-		}catch(Exception e){
-		
-			
+
+			tx.success();
+
+			System.out.println("friendsList().size " + friendList.size());
+
+			return friendList;
+
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
-
-	
-	
-	
 	public TopicNode createTopicNode(String topicName) {
 
 		TopicNode topicNode = null;
