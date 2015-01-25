@@ -58,12 +58,13 @@ public class PublicDAOImpl implements IPublicDAO {
 		mongoClient = new MongoClient(serverAddress);
 		DB dbs = mongoClient.getDB("aic2014");
 		DBCollection dbCollection = dbs.getCollection("history-test");
+
 		String tmp = status.getText();
 		String tps = topics(status.getText());
 		if (tps.isEmpty() == false) {
 			BasicDBObject dbo = new BasicDBObject("tweet", tmp);
 			dbo.append("name", status.getUser().getName());
-
+			dbo.append("tweetCount" , status.getUser().getStatusesCount());
 			dbo.append("favorites", status.getFavoriteCount());
 			dbo.append("retweets", status.getRetweetCount());
 
@@ -127,6 +128,9 @@ public class PublicDAOImpl implements IPublicDAO {
 			// } else {
 			// insertTweet(dbObject);
 			// }
+			
+			
+			
 			graphService.processDbObject(dbObject);
 		}
 	}

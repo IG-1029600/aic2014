@@ -1,6 +1,6 @@
 /target/
 /database/neo4j/
-
+/database/
 
 */*/target
 *.orig
