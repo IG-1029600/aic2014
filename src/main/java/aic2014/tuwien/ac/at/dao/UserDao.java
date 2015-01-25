@@ -120,7 +120,7 @@ public class UserDao {
 
 	public List<User> getInfluentUsers(int limit) {
 		System.out.println("#2");
-		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.numOfFollowers)>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc", User.class).setMaxResults(limit).getResultList();
+		return em.createQuery("SELECT u FROM User u  WHERE u.favorites>100 and u.retweets>100 and u.numOfFollowers>100 order by (u.favorites+u.retweets+u.numOfFollowers) desc", User.class).setMaxResults(limit).getResultList();
 
 	}
 

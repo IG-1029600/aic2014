@@ -5,7 +5,6 @@ import javax.inject.Named;
 
 import org.springframework.context.annotation.Scope;
 
-import aic2014.tuwien.ac.at.beans.User;
 import aic2014.tuwien.ac.at.dao.UserDao;
 import aic2014.tuwien.ac.at.web.model.UserModel;
 
@@ -21,28 +20,18 @@ public class UserController {
 
 	public void findUsers() {
 
-		// ClassPathXmlApplicationContext context = new
-		// ClassPathXmlApplicationContext("applicationContext.xml");
-		// UserDao userDao = (UserDao) context.getBean("userDao");
-
 		if (userModel.getType().equals("most")) {
-			System.out.println("amount: " + userModel.getAmount());
-			// userModel.setSearchResult(userDao.getInfluentUsers(Integer.parseInt(userModel.getAmount())));
-
-			for (User u : userDao.getInfluentUsers(Integer.parseInt(userModel.getAmount()))) {
-				System.out.println("username: " + u.getUsername());
-			}
+			userModel.setSearchResult(userDao.getInfluentUsers(Integer.parseInt(userModel.getAmount())));
 		}
 
 		if (userModel.getType().equals("broad")) {
 
+			userModel.setSearchResult(userDao.findUsersInterestedInBroadRangeOfTopics(Integer.parseInt(userModel.getAmount())));
 		}
 
 		if (userModel.getType().equals("focused")) {
-
+			userModel.setSearchResult(userDao.findUsersInterestedFocused(Integer.parseInt(userModel.getAmount())));
 		}
-
-		// context.close();
 
 	}
 

@@ -27,7 +27,7 @@
 		
 			<p:dataTable id="#{idPrefix}searchUser" var="item" value="#{userController.userModel.searchResult}">  
 		        
-		        <p:column headerText="Username">
+		        <p:column headerText="Username" rendered="#{userModel.type eq 'most'}">
 		            <h:outputText value="#{item.username}" />
 		        </p:column>   
 		  

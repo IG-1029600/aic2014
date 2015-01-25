@@ -4,7 +4,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import aic2014.tuwien.ac.at.dao.UserDao;
 import aic2014.tuwien.ac.at.web.model.AddModel;
@@ -16,9 +15,10 @@ public class AddController {
 	@Inject
 	private AddModel addModel;
 
+	@Inject
+	private UserDao userDao;
+
 	public void findAdds() {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-		UserDao userDao = (UserDao) context.getBean("userDao");
 
 		System.out.println("username:" + addModel.getUsername() + " interest:" + addModel.getInterest());
 
@@ -30,11 +30,6 @@ public class AddController {
 			addModel.setSearchResult(userDao.getAddsforUserbyFriends(addModel.getUsername(), 3, 0));
 		}
 
-		// for (Document doc : addModel.getSearchResult()) {
-		// System.out.println("Result: " + doc.getName());
-		// }
-
-		context.close();
 	}
 
 	public AddModel getAddModel() {

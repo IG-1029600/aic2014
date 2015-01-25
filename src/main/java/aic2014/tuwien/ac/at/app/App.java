@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import aic2014.tuwien.ac.at.beans.Document;
 import aic2014.tuwien.ac.at.beans.User;
+import aic2014.tuwien.ac.at.dao.DocumentStoreDAOImpl;
 import aic2014.tuwien.ac.at.dao.PublicDAOImpl;
 import aic2014.tuwien.ac.at.dao.UserDao;
 import aic2014.tuwien.ac.at.services.PublicStreamService;
@@ -36,6 +38,13 @@ public class App {
 
 			// publicDao.analyze();
 			// publicDao.calculateScores();
+
+			DocumentStoreDAOImpl docDao = new DocumentStoreDAOImpl();
+
+			Document document = new Document("name", "company", "filepath", "art", "homepage");
+
+			docDao.createDocument(document);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

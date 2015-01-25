@@ -16,4 +16,46 @@
 	 <context:annotation-config /> 
   	<context:component-scan base-package="aic2014.tuwien.ac.at"/>
 	
+	<tx:annotation-driven />
+	<context:annotation-config></context:annotation-config>
+	<bean id="userDao" class="aic2014.tuwien.ac.at.dao.UserDao"></bean>
+	<bean id="publicDAOImpl" class="aic2014.tuwien.ac.at.dao.PublicDAOImpl" autowire="byType">
+		<constructor-arg value="null"></constructor-arg>
+		<property name="userDao" ref="userDao"></property>
+		<property name="calc" ref="interestedUsersCalculationService"></property>
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver"></property>
+		<property name="url" value="jdbc:h2:/Users/leventak/dev/workspaceUni/aic2014/database/testdb;AUTO_SERVER=TRUE;" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="persistenceUnitName" value="jpaData"></property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+			</bean>
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.release_mode">on_close</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory">
+		</property>
+	</bean>
+	<bean id="interestedUsersCalculationService"
+		class="aic2014.tuwien.ac.at.services.InterestedUsersCalculationService">
+	<property name="userDao" ref="userDao"></property>
+	</bean>
+	
 </beans>
