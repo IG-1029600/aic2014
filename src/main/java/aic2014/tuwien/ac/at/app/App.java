@@ -26,7 +26,7 @@ public class App {
 
 		PublicStreamService streamService = new PublicStreamService();
 
-		// streamService.listenToStream();
+		//streamService.listenToStream();
 
 		try {
 			PublicDAOImpl publicDao = new PublicDAOImpl(null);

@@ -10,6 +10,7 @@ import twitter4j.Status;
 import twitter4j.UserMentionEntity;
 import aic2014.tuwien.ac.at.beans.Tweet;
 import aic2014.tuwien.ac.at.beans.User;
+import aic2014.tuwien.ac.at.services.InterestedUsersCalculationService;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -133,6 +134,18 @@ public class PublicDAOImpl implements IPublicDAO {
 			
 			graphService.processDbObject(dbObject);
 		}
+		
+		calculateScores();
+		
+		System.out.println("finished analyze");
+	}
+	
+	private void calculateScores(){	
+		System.out.println("starting to calculate scores..");
+		InterestedUsersCalculationService calc = new InterestedUsersCalculationService();
+		calc.calculateFocusedScore(0.5);
+		calc.calculateBroadScore(0.5);
+		
 	}
 
 	private void insertTweet(BasicDBObject dbObject) {

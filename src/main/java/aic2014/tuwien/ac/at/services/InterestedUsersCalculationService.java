@@ -19,7 +19,7 @@ public class InterestedUsersCalculationService {
 		userDao = (UserDao) context.getBean("userDao");
 	}
 
-	public List<User> calculateFocusedScore(int count, double alphaParam) {
+	public List<User> calculateFocusedScoreAndGetUsers(int count, double alphaParam) {
 
 		if (alphaParam <= 0) {
 			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
@@ -45,7 +45,22 @@ public class InterestedUsersCalculationService {
 		return users.subList(0, count);
 	}
 
-	public User calculateFocusedScoreForUser(User user) {
+	public void calculateFocusedScore(double alphaParam) {
+
+		if (alphaParam <= 0) {
+			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
+			return;
+		}
+
+		List<User> users = userDao.getAll();
+
+		for (User currUser : users) {
+
+			calculateFocusedScoreForUser(currUser);
+		}
+	}
+
+	private User calculateFocusedScoreForUser(User user) {
 
 		List<Double> scores = new ArrayList<>();
 
@@ -60,7 +75,7 @@ public class InterestedUsersCalculationService {
 		return user;
 	}
 
-	public User calculateFocusedScoreForUser(User user, double alphaParam) {
+	private User calculateFocusedScoreForUser(User user, double alphaParam) {
 		if (alphaParam <= 0) {
 			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
 			return user;
@@ -79,7 +94,18 @@ public class InterestedUsersCalculationService {
 		return user;
 	}
 
-	public User calculateBroadScoreForUser(User user) {
+	public void calculateBroadScore(double alphaParam) {
+		if (alphaParam <= 0) {
+			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
+			return;
+		}
+
+		for (User currUser : userDao.getAll()) {
+			calculateBroadScoreForUser(currUser, alphaParam);
+		}
+	}
+
+	private User calculateBroadScoreForUser(User user) {
 
 		int userTopics = user.getTopics().size();
 
@@ -89,7 +115,7 @@ public class InterestedUsersCalculationService {
 		return user;
 	}
 
-	public User calculateBroadScoreForUser(User user, double alphaParam) {
+	private User calculateBroadScoreForUser(User user, double alphaParam) {
 		if (alphaParam <= 0) {
 			System.out.println("invalid value for alphaParam: " + alphaParam + " ; abort calculating scores");
 			return user;
