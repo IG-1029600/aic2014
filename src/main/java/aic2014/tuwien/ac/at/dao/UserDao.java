@@ -67,8 +67,7 @@ public class UserDao {
 
 	public List<User> getInfluentUsers(int limit){
 		
-		return em.createQuery("SELECT u FROM User u WHERE u.favorites>10 and u.retweets>10 DESC LIMIT " + limit,User.class)
-				.getResultList();
+		return em.createQuery("SELECT u FROM User u  WHERE (u.favorites+u.retweets+u.totalTweetCount)>100 order by (u.favorites+u.retweets+u.totalTweetCount) desc",User.class).setMaxResults(limit).getResultList();
 	}
 	public List<User> findUsersInterestedFocused(int count) {
 

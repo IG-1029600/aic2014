@@ -128,13 +128,13 @@ public class PublicDAOImpl implements IPublicDAO {
 			BasicDBObject dbObject = (BasicDBObject) cursor.next();
 			// TODO (Cannot cast dbObject to boolean
 
-			boolean retweet =  false; //(boolean) dbObject.get("retweet");
-			 //if (retweet == true) {
-			 //insertTweet(dbObject);
-			 //insertRetweet(dbObject);
-			 //} else {
-			 //insertTweet(dbObject);
-			 //}
+			boolean retweet = (boolean) dbObject.get("retweet");
+			 if (retweet == true) {
+			 insertTweet(dbObject);
+			 insertRetweet(dbObject);
+			 } else {
+			 insertTweet(dbObject);
+			 }
 
 			graphService.processDbObject(dbObject);
 		}
