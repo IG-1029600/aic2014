@@ -69,7 +69,16 @@ public class UserDao {
 
 		ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
 
-		return docList;
+		
+		ArrayList<Document> docFinal = new ArrayList<Document>();
+		for(Document doc : docList){
+			if(docFinal.contains(doc)==false){
+				docFinal.add(doc);
+			}
+		}
+		System.out.println(docFinal.size());
+		return docFinal;
+	
 	}
 
 	public ArrayList<Document> getAddsforUserbyFriends(String username, int depth, int numberOfMentioned) {
@@ -108,7 +117,14 @@ public class UserDao {
 
 			ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
 
-			return docList;
+			ArrayList<Document> docFinal = new ArrayList<Document>();
+			for(Document doc : docList){
+				if(docFinal.contains(doc)==false){
+					docFinal.add(doc);
+				}
+			}
+			System.out.println(docFinal.size());
+			return docFinal;
 
 		} catch (Exception e) {
 			e.printStackTrace();
