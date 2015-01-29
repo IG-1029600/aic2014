@@ -50,6 +50,7 @@ public class DocumentStoreDAOImpl implements IDocumentStoreDAO {
 			dbo.append("company", document.getCompany());
 			dbo.append("homepage", document.getHomepage());
 			dbo.append("category", document.getCategory());
+			dbo.append("filepath", document.getFilepath());
 			dbCollection.insert(dbo);
 			// saveImage(document.getFilepath(), document.getName());
 			return true;
@@ -151,7 +152,7 @@ public class DocumentStoreDAOImpl implements IDocumentStoreDAO {
 
 				while (curs.hasNext()) {
 					DBObject dbObject = curs.next();
-					Document doc = new Document((String) dbObject.get("name"), (String) dbObject.get("company"), "", (String) dbObject.get("category"), (String) dbObject.get("homepage"));
+					Document doc = new Document((String) dbObject.get("name"), (String) dbObject.get("company"), (String) dbObject.get("filepath"), (String) dbObject.get("category"), (String) dbObject.get("homepage"));
 					docList.add(doc);
 
 				}

@@ -18,7 +18,6 @@
 		        <f:selectItem itemValue="existing" itemLabel="existing" />
 		        <f:selectItem itemValue="potential" itemLabel="potential" />
 		    </p:selectOneMenu>
-	        <!-- TODO get parameters to actionListener -->
 	        <p:commandButton value="search" update="#{idPrefix}searchAdd" actionListener="#{addController.findAdds()}"></p:commandButton>
 	        <p:spacer width="180px" height="20px" />
 			
@@ -36,15 +35,14 @@
         <p:column headerText="Category">  
             <h:outputText value="#{item.category}" />  
         </p:column> 
-        <p:column headerText="Link">  
+        <p:column headerText="Homepage">  
             <h:outputText value="#{item.homepage}" />  
         </p:column>
-        <p:column headerText="Add">  
-            <h:outputText value="#{item.filepath}" />  
+        <p:column headerText="Ad" width="800">
+        	<p:graphicImage value="/resources/images/#{item.filepath}" />
         </p:column>
         
     </p:dataTable>  
-    
    
     </p:fieldset>
    </ui:composition>

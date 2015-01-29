@@ -69,16 +69,16 @@ public class UserDao {
 
 		ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
 
-		
 		ArrayList<Document> docFinal = new ArrayList<Document>();
-		for(Document doc : docList){
-			if(docFinal.contains(doc)==false){
+		for (Document doc : docList) {
+			if (docFinal.contains(doc) == false) {
 				docFinal.add(doc);
 			}
+			System.out.println(doc.getFilepath());
 		}
-		System.out.println(docFinal.size());
+
 		return docFinal;
-	
+
 	}
 
 	public ArrayList<Document> getAddsforUserbyFriends(String username, int depth, int numberOfMentioned) {
@@ -93,38 +93,37 @@ public class UserDao {
 
 			friendList = graph.friendsList(username, depth);
 
-			for (String friend : friendList) {
-				System.out.println(friend);
-				List<User> userList = getOne(friend);
-				if (userList.size() != 0) {
-					User user = userList.get(0);
-
-					for (Topic topic : user.getTopics()) {
-
-						if (topic.getCount() >= numberOfMentioned) {
-
-							if (topicList.contains(topic.getName()) == false) {
-								topicList.add(topic.getName());
-							}
-
-						}
-
-					}
-				}
-			}
-
-			DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
-
-			ArrayList<Document> docList = docStore.findAddsForKeywords(topicList);
-
-			ArrayList<Document> docFinal = new ArrayList<Document>();
-			for(Document doc : docList){
-				if(docFinal.contains(doc)==false){
-					docFinal.add(doc);
-				}
-			}
-			System.out.println(docFinal.size());
-			return docFinal;
+			graph.shutDown();
+			/*
+			 * for (String friend : friendList) { System.out.println(friend);
+			 * List<User> userList = getOne(friend); if (userList.size() != 0) {
+			 * User user = userList.get(0);
+			 * 
+			 * for (Topic topic : user.getTopics()) {
+			 * 
+			 * if (topic.getCount() >= numberOfMentioned) {
+			 * 
+			 * if (topicList.contains(topic.getName()) == false) {
+			 * topicList.add(topic.getName()); }
+			 * 
+			 * }
+			 * 
+			 * } } }
+			 * 
+			 * DocumentStoreDAOImpl docStore = new DocumentStoreDAOImpl();
+			 * 
+			 * ArrayList<Document> docList =
+			 * docStore.findAddsForKeywords(topicList);
+			 * 
+			 * ArrayList<Document> docFinal = new ArrayList<Document>();
+			 * for(Document doc : docList){ if(docFinal.contains(doc)==false){
+			 * docFinal.add(doc); } }
+			 * 
+			 * System.out.println(docFinal.size());
+			 * 
+			 * return docFinal;
+			 */
+			return null;
 
 		} catch (Exception e) {
 			e.printStackTrace();
